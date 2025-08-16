@@ -1,15 +1,17 @@
+'use client'
+
 import React from 'react'
 import styles from './NeumorphicButton.module.css'
 
 interface NeumorphicButtonProps {
   children: React.ReactNode
-  className?: string
   onClick?: () => void
+  className?: string
 }
 
-export function NeumorphicButton({ children, className = "", ...props }: NeumorphicButtonProps) {
+export function NeumorphicButton({ children, onClick, className = '' }: NeumorphicButtonProps) {
   return (
-    <button className={`${styles.button} ${className}`} {...props}>
+    <button className={`${styles.button} ${className}`} onClick={onClick}>
       <div className={styles.buttonOuter}>
         <div className={styles.buttonInner}>
           <span>{children}</span>
@@ -25,6 +27,7 @@ interface PrototypeButtonProps {
   intent?: "primary" | "secondary"
   size?: "sm" | "md" | "lg"
   className?: string
+  onClick?: () => void
 }
 
 export function PrototypeButton({
@@ -33,29 +36,16 @@ export function PrototypeButton({
   intent = "primary",
   size = "md",
   className = "",
+  onClick,
   ...props
 }: PrototypeButtonProps) {
-  const sizeClasses = {
-    sm: "px-4 py-2 text-sm",
-    md: "px-6 py-3 text-base",
-    lg: "px-8 py-4 text-lg"
-  }
-
-  const intentClasses = {
-    primary: styles.prototypeButton,
-    secondary: ""
-  }
-
   return (
-    <button 
-      className={`${styles.button} ${intentClasses[intent]} ${className}`}
+    <NeumorphicButton 
+      className={`${intent === "primary" ? "bg-gradient-to-r from-[#8fad7f] to-[#7a9970] text-white" : ""} ${className}`}
+      onClick={onClick}
       {...props}
     >
-      <div className={styles.buttonOuter}>
-        <div className={styles.buttonInner}>
-          <span>{children}</span>
-        </div>
-      </div>
-    </button>
+      {children}
+    </NeumorphicButton>
   )
 }

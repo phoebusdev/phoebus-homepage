@@ -1,35 +1,79 @@
-.nav {
+/* Based on Uiverse toggle switch, adapted for multi-position nav */
+.navWrapper {
   display: flex;
-  gap: 0.5rem;
-  background: #f5f0e8;
-  padding: 4px;
-  border-radius: 25px;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  border-radius: 50em; /* Fully rounded pill shape */
+  padding: 0.125em;
+  background-image: linear-gradient(to bottom, #e2ddd5, #f5f0e8);
+  box-shadow: 0 1px 1px rgb(255 255 255 / 0.6);
+  font-size: 1.125rem;
+}
+
+.navContainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+  border-radius: 50em; /* Fully rounded pill shape */
+  height: 2.5em;
+  background-color: #f5f0e8;
   box-shadow:
-    inset 4px 4px 8px #d4cfc7,
-    inset -4px -4px 8px #ffffff;
+    inset 0 0 0.0625em 0.125em rgb(255 255 255 / 0.2),
+    inset 0 0.0625em 0.125em rgb(0 0 0 / 0.4);
+  padding: 0.25em;
+  gap: 0.5em;
 }
 
 .navItem {
-  background: transparent;
+  position: relative;
+  z-index: 10;
+  padding: 0.5em 1.5em;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-family: 'Montserrat', sans-serif;
+  background: none;
+  color: #6a6a6a;
+  font-family: "Montserrat", system-ui, sans-serif;
+  font-size: 0.9rem;
   font-weight: 500;
-  color: #666;
+  letter-spacing: -0.02em;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.875rem;
-}
-
-.navItem:hover {
-  color: #4a4a4a;
+  transition: color 0.3s ease;
+  white-space: nowrap;
 }
 
 .navItem.active {
-  background: #f0ebe3;
-  color: #4a4a4a;
+  color: #3a3a3a;
+  font-weight: 600;
+}
+
+.navSlider {
+  position: absolute;
+  z-index: 1;
+  left: 0.25em;
+  border-radius: 50em; /* Fully rounded pill shape */
+  height: calc(100% - 0.5em);
+  background-color: #f5f0e8;
   box-shadow:
-    3px 3px 6px #d4cfc7,
-    -3px -3px 6px #ffffff;
+    inset 0 -0.0625em 0.0625em 0.125em rgb(0 0 0 / 0.1),
+    inset 0 -0.125em 0.0625em rgb(0 0 0 / 0.2),
+    inset 0 0.1875em 0.0625em rgb(255 255 255 / 0.3),
+    0 0.125em 0.125em rgb(0 0 0 / 0.5);
+  transition:
+    left 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .navWrapper {
+    font-size: 0.875rem;
+  }
+
+  .navItem {
+    padding: 0.5em 1em;
+    font-size: 0.8rem;
+  }
 }

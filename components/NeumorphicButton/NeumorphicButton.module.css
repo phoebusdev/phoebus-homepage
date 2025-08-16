@@ -1,3 +1,4 @@
+/* From Uiverse.io by FColombati */
 .button {
   all: unset;
   cursor: pointer;
@@ -35,6 +36,7 @@
   z-index: 1;
   border-radius: inherit;
   transition: box-shadow 300ms ease;
+  will-change: box-shadow;
   box-shadow:
     0 0.02em 0.02em -0.01em rgba(5, 5, 5, 0.3),
     0 0.01em 0.01em -0.01em rgba(5, 5, 5, 0.2),
@@ -49,43 +51,55 @@
 }
 
 .buttonInner {
+  --inset: 0.035em;
   position: relative;
   z-index: 1;
   border-radius: inherit;
   padding: 1em 1.5em;
+  /* Cream background matching cards with subtle gradient bleed-through */
   background: linear-gradient(
     135deg,
-    rgba(240, 235, 227, 0.95),
-    rgba(245, 240, 232, 0.92)
+    rgba(240, 235, 227, 0.95),  /* #f0ebe3 with 95% opacity */
+    rgba(245, 240, 232, 0.92)   /* #f5f0e8 with 92% opacity */
   );
   backdrop-filter: blur(8px);
-  transition: box-shadow 300ms ease, background 250ms ease;
+  transition:
+    box-shadow 300ms ease,
+    clip-path 250ms ease,
+    background 250ms ease,
+    transform 250ms ease;
+  will-change: box-shadow, clip-path, background, transform;
   overflow: clip;
   clip-path: inset(0 0 0 0 round 100em);
   box-shadow:
-    0 0 0 0 inset rgba(5, 5, 5, 0.05),
-    -0.02em -0.02em 0.03em 0 inset rgba(212, 207, 199, 0.3),
-    0 0 0 0 inset rgba(5, 5, 5, 0.05),
-    0 0 0.02em 0.1em inset rgba(255, 255, 255, 0.4),
-    0.01em 0.02em 0.05em 0 inset rgba(255, 255, 255, 0.7),
-    0.06em 0.06em 0.06em inset rgba(255, 255, 255, 0.3),
-    -0.04em -0.1em 0.15em 0.05em inset rgba(212, 207, 199, 0.2);
+    /* 1 */ 0 0 0 0 inset rgba(5, 5, 5, 0.05),
+    /* 2 */ -0.02em -0.02em 0.03em 0 inset rgba(212, 207, 199, 0.3),  /* Using #d4cfc7 shadow */
+    /* 3 */ 0 0 0 0 inset rgba(5, 5, 5, 0.05),
+    /* 4 */ 0 0 0.02em 0.1em inset rgba(255, 255, 255, 0.4),
+    /* 5 */ 0.01em 0.02em 0.05em 0 inset rgba(255, 255, 255, 0.7),
+    /* 6 */ 0.06em 0.06em 0.06em inset rgba(255, 255, 255, 0.3),
+    /* 7 */ -0.04em -0.1em 0.15em 0.05em inset rgba(212, 207, 199, 0.2);
 }
 
 .button:hover .buttonInner {
+  clip-path: inset(
+    clamp(1px, 0.0625em, 2px) clamp(1px, 0.0625em, 2px)
+      clamp(1px, 0.0625em, 2px) clamp(1px, 0.0625em, 2px) round 100em
+  );
+  /* Slightly deeper cream on hover with maintained gradient bleed */
   background: linear-gradient(
     135deg,
-    rgba(235, 230, 222, 0.93),
+    rgba(235, 230, 222, 0.93),  /* Slightly darker cream */
     rgba(240, 235, 227, 0.90)
   );
   box-shadow:
-    0.05em 0.08em 0.03em 0 inset rgba(212, 207, 199, 0.4),
-    -0.015em -0.02em 0.03em 0.015em inset rgba(212, 207, 199, 0.3),
-    0.1em 0.1em 0.1em 0 inset rgba(212, 207, 199, 0.3),
-    0 0 0.03em 0.3em inset rgba(255, 255, 255, 0.2),
-    0 0 0 0 inset rgba(255, 255, 255, 0.5),
-    0.06em 0.06em 0.06em inset rgba(255, 255, 255, 0.15),
-    -0.04em -0.06em 0.1em 0.05em inset rgba(212, 207, 199, 0.15);
+    /* 1 */ 0.05em 0.08em 0.03em 0 inset rgba(212, 207, 199, 0.4),
+    /* 2 */ -0.015em -0.02em 0.03em 0.015em inset rgba(212, 207, 199, 0.3),
+    /* 3 */ 0.1em 0.1em 0.1em 0 inset rgba(212, 207, 199, 0.3),
+    /* 4 */ 0 0 0.03em 0.3em inset rgba(255, 255, 255, 0.2),
+    /* 5 */ 0 0 0 0 inset rgba(255, 255, 255, 0.5),
+    /* 6 */ 0.06em 0.06em 0.06em inset rgba(255, 255, 255, 0.15),
+    /* 7 */ -0.04em -0.06em 0.1em 0.05em inset rgba(212, 207, 199, 0.15);
 }
 
 .buttonInner span {
@@ -95,17 +109,21 @@
   letter-spacing: -0.05em;
   font-weight: 500;
   color: rgba(0, 0, 0, 0);
+  /* Harmonious text gradient matching the overall aesthetic */
   background-image: linear-gradient(
     135deg,
-    rgba(74, 74, 74, 1),
-    rgba(106, 106, 106, 1)
+    rgba(74, 74, 74, 1),    /* #4a4a4a - matching text color */
+    rgba(106, 106, 106, 1)  /* #6a6a6a - slightly lighter */
   );
   -webkit-background-clip: text;
   background-clip: text;
   transition: transform 250ms ease;
   display: block;
+  will-change: transform;
   text-shadow: rgba(255, 255, 255, 0.3) 0 1px 0;
   -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
 }
 
@@ -117,18 +135,40 @@
   transform: scale(0.975);
 }
 
-/* Prototype button variant */
-.prototypeButton .buttonInner {
-  background: linear-gradient(135deg, #8fad7f 0%, #7a9970 100%);
-}
+/* Mobile-specific adjustments for less aggressive shadows */
+@media (max-width: 768px) {
+  .buttonOuter {
+    box-shadow:
+      0 0.01em 0.01em -0.005em rgba(5, 5, 5, 0.2),
+      0 0.005em 0.005em -0.005em rgba(5, 5, 5, 0.1),
+      0.02em 0.05em 0.02em -0.005em rgba(5, 5, 5, 0.1);
+  }
 
-.prototypeButton .buttonInner span {
-  background-image: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.9));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: rgba(0, 0, 0, 0);
-}
+  .buttonInner {
+    box-shadow:
+      0 0 0 0 inset rgba(5, 5, 5, 0.03),
+      -0.01em -0.01em 0.02em 0 inset rgba(5, 5, 5, 0.1),
+      0 0 0 0 inset rgba(5, 5, 5, 0.03),
+      0 0 0.01em 0.05em inset rgba(255, 255, 255, 0.1),
+      0.005em 0.01em 0.02em 0 inset rgba(255, 255, 255, 0.3),
+      0.03em 0.03em 0.03em inset rgba(255, 255, 255, 0.1),
+      -0.02em -0.05em 0.08em 0.025em inset rgba(5, 5, 5, 0.1);
+  }
 
-.prototypeButton:hover .buttonInner {
-  background: linear-gradient(135deg, #7a9970 0%, #6a8660 100%);
+  .button:hover .buttonInner {
+    /* Mobile hover state with cream colors */
+    background: linear-gradient(
+      135deg,
+      rgba(235, 230, 222, 0.93),
+      rgba(240, 235, 227, 0.90)
+    );
+    box-shadow:
+      0.025em 0.04em 0.015em 0 inset rgba(212, 207, 199, 0.3),
+      -0.008em -0.01em 0.015em 0.008em inset rgba(212, 207, 199, 0.2),
+      0.05em 0.05em 0.05em 0 inset rgba(212, 207, 199, 0.2),
+      0 0 0.015em 0.15em inset rgba(255, 255, 255, 0.08),
+      0 0 0 0 inset rgba(255, 255, 255, 0.3),
+      0.03em 0.03em 0.03em inset rgba(255, 255, 255, 0.1),
+      -0.02em -0.03em 0.05em 0.025em inset rgba(212, 207, 199, 0.1);
+  }
 }
