@@ -1,0 +1,35 @@
+.nav {
+  display: flex;
+  gap: 0.5rem;
+  background: #f5f0e8;
+  padding: 4px;
+  border-radius: 25px;
+  box-shadow:
+    inset 4px 4px 8px #d4cfc7,
+    inset -4px -4px 8px #ffffff;
+}
+
+.navItem {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.875rem;
+}
+
+.navItem:hover {
+  color: #4a4a4a;
+}
+
+.navItem.active {
+  background: #f0ebe3;
+  color: #4a4a4a;
+  box-shadow:
+    3px 3px 6px #d4cfc7,
+    -3px -3px 6px #ffffff;
+}

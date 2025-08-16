@@ -1,0 +1,48 @@
+.hamburger {
+  background: #f5f0e8;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  cursor: pointer;
+  padding: 0;
+  box-shadow:
+    6px 6px 12px #d4cfc7,
+    -6px -6px 12px #ffffff;
+  transition: all 0.3s ease;
+}
+
+.hamburger:active {
+  box-shadow:
+    inset 3px 3px 6px #d4cfc7,
+    inset -3px -3px 6px #ffffff;
+}
+
+.hamburgerInner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 4px;
+}
+
+.line {
+  width: 20px;
+  height: 2px;
+  background: #4a4a4a;
+  border-radius: 1px;
+  transition: all 0.3s ease;
+}
+
+.open .line:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.open .line:nth-child(2) {
+  opacity: 0;
+}
+
+.open .line:nth-child(3) {
+  transform: rotate(-45deg) translate(6px, -6px);
+}

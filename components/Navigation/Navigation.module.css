@@ -1,0 +1,100 @@
+/* Navigation Neumorphic Styling */
+.navigation {
+  position: relative;
+  z-index: 50;
+  width: 100%;
+  padding: 0.75rem 1rem;
+}
+
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.navContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  text-shadow:
+    2px 2px 4px rgba(190, 190, 190, 0.6),
+    -2px -2px 4px rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease;
+}
+
+.logo:hover {
+  text-shadow:
+    3px 3px 6px rgba(190, 190, 190, 0.8),
+    -3px -3px 6px rgba(255, 255, 255, 1);
+}
+
+.navDesktop {
+  display: none;
+}
+
+.navMobile {
+  display: block;
+}
+
+/* Mobile Menu Overlay */
+.mobileMenuOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.mobileMenuContainer {
+  margin: 1rem;
+  max-width: 20rem;
+  width: 90%;
+}
+
+.mobileMenuItems {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* Tablet and Desktop */
+@media (min-width: 768px) {
+  .navigation {
+    padding: 0.5rem 1rem;
+  }
+
+  .navDesktop {
+    display: block;
+  }
+
+  .navMobile {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .navigation {
+    padding: 0.75rem 1rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .navigation {
+    padding: 1rem 1rem;
+  }
+}
