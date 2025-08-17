@@ -3,6 +3,7 @@
 import { NeumorphicButton } from '@/components/NeumorphicButton/NeumorphicButton'
 import { NeumorphicCard } from '@/components/NeumorphicCard/NeumorphicCard'
 import { Navigation } from '@/components/Navigation/Navigation'
+import { Footer } from '@/components/Footer/Footer'
 import { Icon } from '@/components/Icon/Icon'
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
@@ -205,6 +206,7 @@ export default function ServicesPage() {
     return (
       <main className="min-h-screen relative">
         <Navigation />
+        <Footer />
         <div className="relative z-10">
           <section className="relative pt-4 pb-12 md:pt-6 md:pb-16 lg:pt-8 lg:pb-20 px-4 w-full">
             <div className="max-w-6xl mx-auto w-full">
@@ -230,6 +232,7 @@ export default function ServicesPage() {
     >
       <main className="min-h-screen relative">
         <Navigation />
+        <Footer />
 
         {/* Parallax Background Layer */}
         <Parallax 
