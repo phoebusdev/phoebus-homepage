@@ -54,8 +54,15 @@ const processSteps = [
 function useStackedDeckAnimation() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [progress, setProgress] = useState(0)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+
     const handleScroll = () => {
       if (!containerRef.current) return
 
@@ -80,9 +87,9 @@ function useStackedDeckAnimation() {
     handleScroll() // Initial call
     
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [mounted])
 
-  return { containerRef, progress }
+  return { containerRef, progress: mounted ? progress : 0 }
 }
 
 export default function ProcessPage() {
@@ -117,6 +124,7 @@ export default function ProcessPage() {
             </div>
           </section>
         </div>
+        <Footer />
       </main>
     )
   }
@@ -221,6 +229,7 @@ export default function ProcessPage() {
           <EnhancedStackedDeckSection />
 
         </div>
+        <Footer />
       </main>
     </ParallaxProvider>
   )
@@ -243,8 +252,15 @@ function StackedCard({ step, index }: { step: any, index: number }) {
 function CascadingCardsSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [progress, setProgress] = useState(0)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+
     const handleScroll = () => {
       if (!sectionRef.current) return
 
@@ -268,7 +284,7 @@ function CascadingCardsSection() {
     handleScroll() // Initial check
     
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [mounted])
 
   const cascadingContent = {
     header: {
@@ -317,7 +333,7 @@ function CascadingCardsSection() {
             <div
               className="transition-transform duration-500 ease-out"
               style={{
-                transform: `translateX(${(1 - progress) * (-window.innerWidth - 100)}px)`,
+                transform: `translateX(${(1 - (mounted ? progress : 0)) * (-1200)}px)`,
               }}
             >
               <CascadingCard content={cascadingContent.leftCard} />
@@ -327,7 +343,7 @@ function CascadingCardsSection() {
             <div
               className="transition-transform duration-500 ease-out"
               style={{
-                transform: `translateX(${(1 - progress) * (window.innerWidth + 100)}px)`,
+                transform: `translateX(${(1 - (mounted ? progress : 0)) * (1200)}px)`,
               }}
             >
               <CascadingCard content={cascadingContent.rightCard} />
@@ -351,7 +367,7 @@ function CascadingCardsSection() {
                   key={idx}
                   className="transition-transform duration-700 ease-out"
                   style={{
-                    transform: movements[idx],
+                    transform: movements[idx].replace(/(1 - progress)/g, `(1 - ${mounted ? progress : 0})`),
                     transitionDelay: `${idx * 100}ms` // Stagger the animations
                   }}
                 >
@@ -396,8 +412,15 @@ function BenefitCard({ benefit }: { benefit: string }) {
 function EnhancedStackedDeckSection() {
   const sectionRef = useRef<HTMLDivElement>(null)
   const [progress, setProgress] = useState(0)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted) return
+
     const handleScroll = () => {
       if (!sectionRef.current) return
 
@@ -422,7 +445,7 @@ function EnhancedStackedDeckSection() {
     handleScroll() // Initial check
     
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [mounted])
 
   const techStackCards = [
     {
@@ -477,9 +500,10 @@ function EnhancedStackedDeckSection() {
           <div className="relative h-96 w-full flex items-center justify-center">
             {techStackCards.map((card, idx) => {
               // Calculate transforms for horizontal spread
-              const translateX = progress * (idx - 2) * 200 // Spread horizontally: center card stays, others move left/right
-              const rotation = progress * (idx % 2 === 0 ? -5 : 5) // Alternating rotation
-              const scale = 1 + progress * idx * 0.02 // Scale increase as they spread
+              const animProgress = mounted ? progress : 0
+              const translateX = animProgress * (idx - 2) * 200 // Spread horizontally: center card stays, others move left/right
+              const rotation = animProgress * (idx % 2 === 0 ? -5 : 5) // Alternating rotation
+              const scale = 1 + animProgress * idx * 0.02 // Scale increase as they spread
               const baseScale = 1 - idx * 0.05 // Each card 95% size of the one below when stacked
               const finalScale = baseScale * scale
               const zIndex = 5 - idx // Higher z-index for cards that should be on top when stacked
