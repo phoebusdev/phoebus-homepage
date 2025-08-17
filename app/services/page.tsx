@@ -2,7 +2,6 @@
 
 import { NeumorphicButton } from '@/components/NeumorphicButton/NeumorphicButton'
 import { NeumorphicCard } from '@/components/NeumorphicCard/NeumorphicCard'
-import { ServiceCard } from '@/components/ServiceCard/ServiceCard'
 import { Navigation } from '@/components/Navigation/Navigation'
 import { Icon } from '@/components/Icon/Icon'
 import { useState, useEffect } from 'react'

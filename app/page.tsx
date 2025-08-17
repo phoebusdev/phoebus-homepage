@@ -5,9 +5,7 @@ import { NeumorphicCard } from '@/components/NeumorphicCard/NeumorphicCard'
 import { ServiceCard } from '@/components/ServiceCard/ServiceCard'
 import { Navigation } from '@/components/Navigation/Navigation'
 import { Icon } from '@/components/Icon/Icon'
-import { ScrollReference } from '@/components/ScrollReference/ScrollReference'
-import { ResistanceZone } from '@/components/ResistanceZone/ResistanceZone'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 
 const ParallaxProvider = dynamic(
@@ -119,71 +117,24 @@ const whyDifferentItems = [
   }
 ]
 
-// Custom hook for stacked deck animation (from process page)
+// Custom hook for stacked deck animation (exactly like process page)
 function useStackedDeckAnimation() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [progress, setProgress] = useState(0)
-  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
-
     const handleScroll = () => {
       if (!containerRef.current) return
 
       const rect = containerRef.current.getBoundingClientRect()
       const viewportHeight = window.innerHeight
       
-      // Calculate when the animation should start (when section enters viewport)
       const triggerPoint = viewportHeight * 0.5
-      const animationRange = viewportHeight * 1.5 // 1.5 viewport heights for full animation
+      const animationRange = viewportHeight * 1.5
       
-      // Calculate progress based on scroll position
       const scrollFromTrigger = triggerPoint - rect.top
       const rawProgress = Math.max(0, Math.min(1, scrollFromTrigger / animationRange))
       
-      // Apply smooth easing (cubic-bezier equivalent)
-      const easedProgress = rawProgress * rawProgress * (3 - 2 * rawProgress)
-      
-      setProgress(easedProgress)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    handleScroll() // Initial call
-    
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [mounted])
-
-  return { containerRef, progress: mounted ? progress : 0 }
-}
-
-// Custom hook for cascading animation
-function useCascadingAnimation() {
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const [progress, setProgress] = useState(0)
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
-
-    const handleScroll = () => {
-      if (!sectionRef.current) return
-
-      const rect = sectionRef.current.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      
-      const triggerPoint = viewportHeight * 0.8
-      const endPoint = viewportHeight * 0.2
-      
-      const rawProgress = Math.max(0, Math.min(1, (triggerPoint - rect.top) / (triggerPoint - endPoint)))
       const easedProgress = rawProgress * rawProgress * (3 - 2 * rawProgress)
       
       setProgress(easedProgress)
@@ -193,14 +144,15 @@ function useCascadingAnimation() {
     handleScroll()
     
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [mounted])
+  }, [])
 
-  return { sectionRef, progress: mounted ? progress : 0 }
+  return { containerRef, progress }
 }
 
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const { containerRef, progress } = useStackedDeckAnimation()
 
   useEffect(() => {
     setMounted(true)
@@ -210,103 +162,24 @@ export default function HomePage() {
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
 
-  // Prevent hydration mismatch by not rendering until client-side
   if (!mounted) {
     return (
       <main className="min-h-screen relative">
         <Navigation />
         <div className="relative z-10">
-          {/* Static content for SSR */}
           <section className="relative pt-4 pb-12 md:pt-6 md:pb-16 lg:pt-8 lg:pb-20 px-4 w-full">
             <div className="max-w-6xl mx-auto w-full">
               <div className="hero-neumorphic-card text-center">
-                <div className="relative z-10">
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-relaxed font-display break-words neumorphic-text-3d mb-4">
-                    <span className="plastic-tube-text">Digital Products</span>
-                    <br />
-                    <span className="plastic-tube-text">Built Right</span>
-                    <br />
-                    <span className="plastic-tube-text">Delivered Fast</span>
-                  </h1>
-                  <p className="text-lg sm:text-xl text-text-secondary max-w-4xl mx-auto mb-8">
-                    We build websites and apps that work <span className="matter-plastic-light">exactly as promised</span>,
-                    delivered exactly when promised. No hidden fees, no project drag-outs, no vendor lock-in.
-                    Just clean code, clear timelines, and <span className="matter-plastic-light">complete ownership</span>.
-                  </p>
-                  <div className="flex gap-4 flex-wrap justify-center">
-                    <NeumorphicButton>
-                      Get Your Free Prototype
-                    </NeumorphicButton>
-                    <NeumorphicButton>
-                      See Our Approach
-                    </NeumorphicButton>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="py-20 px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
-                  Products That <span className="plastic-tube-text">Work</span>, Not Projects That Drag On
-                </h2>
-                <p className="text-lg text-text-secondary max-w-4xl mx-auto">
-                  We build lean but future-proof. Every project starts minimal but architected for easy expansion. 
-                  No rebuilds needed when you want to add features later.
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-relaxed font-display break-words neumorphic-text-3d mb-4">
+                  <span className="plastic-tube-text">Digital Products</span>
+                  <br />
+                  <span className="plastic-tube-text">Built Right</span>
+                  <br />
+                  <span className="plastic-tube-text">Delivered Fast</span>
+                </h1>
+                <p className="text-lg sm:text-xl text-text-secondary max-w-4xl mx-auto mb-8">
+                  We build websites and apps that work exactly as promised, delivered exactly when promised.
                 </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-                {services.map((service, idx) => (
-                  <ServiceCard
-                    key={idx}
-                    title={service.title}
-                    description={service.description}
-                    features={service.features}
-                    icon={service.icon}
-                    delay={String(idx + 1)}
-                  />
-                ))}
-              </div>
-            </div>
-          </section>
-
-          <section className="py-20 px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-12 items-center">
-                <div>
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
-                    Your Journey From <span className="plastic-tube-text">Concept To Launch</span>
-                  </h2>
-                  <p className="text-lg text-text-secondary">
-                    We've designed a streamlined process that gets your project from idea to reality 
-                    with exceptional speed and quality, starting with a completely free prototype.
-                  </p>
-                </div>
-                <div className="space-y-6">
-                  {processSteps.map((step, idx) => (
-                    <ProcessCard key={idx} step={step} index={idx} />
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section className="py-20 px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
-                  Why We're <span className="plastic-tube-text">Different</span>
-                </h2>
-                <p className="text-lg text-text-secondary max-w-2xl mx-auto">
-                  Most agencies want to keep you dependent. We want to set you free.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                {whyDifferentItems.map((item, idx) => (
-                  <WhyDifferentCard key={idx} item={item} index={idx} />
-                ))}
               </div>
             </div>
           </section>
@@ -323,7 +196,6 @@ export default function HomePage() {
       <main className="min-h-screen relative">
         <Navigation />
 
-        {/* Parallax Background Layer */}
         <Parallax 
           translateY={[-20, 20]}
           className="absolute inset-0 z-0"
@@ -332,257 +204,154 @@ export default function HomePage() {
         </Parallax>
 
         <div className="relative z-10">
-          {/* Hero Section - Generous side margins */}
-          <section className="relative min-h-screen py-20 md:py-24 lg:py-32 px-6 md:px-8 lg:px-12 w-full flex items-center">
-            <div className="max-w-5xl mx-auto w-full">
-              <Parallax 
-                translateY={[-30, 30]} 
-                scale={[1.05, 0.95]}
-              >
-                <div className="hero-neumorphic-card text-center">
-                  <div className="relative z-10">
-                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-relaxed font-display break-words neumorphic-text-3d mb-6">
-                      <span className="plastic-tube-text">Digital Products</span>
-                      <br />
-                      <span className="plastic-tube-text">Built Right</span>
-                      <br />
-                      <span className="plastic-tube-text">Delivered Fast</span>
-                    </h1>
-                    <p className="text-xl sm:text-2xl text-text-secondary max-w-3xl mx-auto mb-8">
-                      We build websites and apps that work <span className="matter-plastic-light">exactly as promised</span>,
-                      delivered exactly when promised. No hidden fees, no project drag-outs, no vendor lock-in.
-                      Just clean code, clear timelines, and <span className="matter-plastic-light">complete ownership</span>.
-                    </p>
-                    <div className="flex gap-4 flex-wrap justify-center">
-                      <NeumorphicButton>
-                        Get Your Free Prototype
-                      </NeumorphicButton>
-                      <NeumorphicButton>
-                        See Our Approach
-                      </NeumorphicButton>
+          {/* Hero Section */}
+          <section className="min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+                <Parallax 
+                  translateY={[-30, 30]} 
+                  scale={[1.05, 0.95]}
+                >
+                  <div className="hero-neumorphic-card text-center">
+                    <div className="relative z-10">
+                      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-relaxed font-display break-words neumorphic-text-3d mb-6">
+                        <span className="plastic-tube-text">Digital Products</span>
+                        <br />
+                        <span className="plastic-tube-text">Built Right</span>
+                        <br />
+                        <span className="plastic-tube-text">Delivered Fast</span>
+                      </h1>
+                      <p className="text-xl sm:text-2xl text-text-secondary max-w-3xl mx-auto mb-8">
+                        We build websites and apps that work <span className="matter-plastic-light">exactly as promised</span>,
+                        delivered exactly when promised. No hidden fees, no project drag-outs, no vendor lock-in.
+                        Just clean code, clear timelines, and <span className="matter-plastic-light">complete ownership</span>.
+                      </p>
+                      <div className="flex gap-4 flex-wrap justify-center">
+                        <NeumorphicButton>
+                          Get Your Free Prototype
+                        </NeumorphicButton>
+                        <NeumorphicButton>
+                          See Our Approach
+                        </NeumorphicButton>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Parallax>
+                </Parallax>
+              </div>
             </div>
           </section>
 
-          {/* Services Section - Stacked Deck Animation */}
-          <ServicesStackedSection />
+          {/* Services Stacked Deck Animation */}
+          <section 
+            ref={containerRef}
+            className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center"
+          >
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+                <div className="text-center mb-16">
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
+                    Products That <span className="plastic-tube-text">Work</span>, Not Projects That Drag On
+                  </h2>
+                  <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
+                    We build lean but future-proof. Every project starts minimal but architected for easy expansion. 
+                    No rebuilds needed when you want to add features later.
+                  </p>
+                </div>
+                
+                <div className="relative h-96 flex items-center justify-center">
+                  {services.map((service, idx) => {
+                    const translateY = progress * idx * 180
+                    const rotateX = progress * 10
+                    const scale = 1 - progress * idx * 0.05
+                    const zIndex = 3 - idx
+                    
+                    return (
+                      <div
+                        key={idx}
+                        className="absolute transition-transform duration-75 ease-out"
+                        style={{
+                          transform: `translateY(${translateY}px) rotateX(${rotateX}deg) scale(${scale})`,
+                          zIndex: zIndex,
+                        }}
+                      >
+                        <ServiceStackCard service={service} index={idx} />
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            </div>
+          </section>
 
-          {/* Process Section - Cascading Animation */}
-          <ProcessCascadingSection />
+          {/* Process Section - Regular Layout */}
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+                <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center">
+                  <Parallax translateY={[-15, 15]}>
+                    <div>
+                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
+                        Your Journey From <span className="plastic-tube-text">Concept To Launch</span>
+                      </h2>
+                      <p className="text-lg md:text-xl text-text-secondary">
+                        We've designed a streamlined process that gets your project from idea to reality 
+                        with exceptional speed and quality, starting with a completely free prototype.
+                      </p>
+                    </div>
+                  </Parallax>
+                  
+                  <div className="space-y-6">
+                    {processSteps.map((step, idx) => (
+                      <Parallax 
+                        key={idx}
+                        translateX={idx % 2 === 0 ? [-15, 0] : [15, 0]}
+                      >
+                        <ProcessCard step={step} index={idx} />
+                      </Parallax>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
 
-          {/* Why We're Different Section - Enhanced Stacked Deck */}
-          <WhyDifferentEnhancedSection />
+          {/* Why Different Section - Grid Layout */}
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+                <Parallax translateY={[-20, 10]}>
+                  <div className="text-center mb-12 md:mb-16">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
+                      Why We're <span className="plastic-tube-text">Different</span>
+                    </h2>
+                    <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
+                      Most agencies want to keep you dependent. We want to set you free.
+                    </p>
+                  </div>
+                </Parallax>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+                  {whyDifferentItems.map((item, idx) => (
+                    <Parallax 
+                      key={idx}
+                      translateY={[20 + idx * 5, -10 - idx * 2]}
+                      easing="easeOutQuad"
+                    >
+                      <WhyDifferentCard item={item} index={idx} />
+                    </Parallax>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
         </div>
-        
-        {/* Scroll Reference Tool */}
-        <ScrollReference />
       </main>
     </ParallaxProvider>
   )
 }
 
-// Services Section with Stacked Deck Animation
-function ServicesStackedSection() {
-  const { containerRef, progress } = useStackedDeckAnimation()
-
-  return (
-    <section 
-      ref={containerRef}
-      className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center"
-    >
-      <div className="max-w-7xl mx-auto w-full">
-        <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
-              Products That <span className="plastic-tube-text">Work</span>, Not Projects That Drag On
-            </h2>
-            <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
-              We build lean but future-proof. Every project starts minimal but architected for easy expansion. 
-              No rebuilds needed when you want to add features later.
-            </p>
-          </div>
-          
-          <div className="relative h-96 flex items-center justify-center">
-            {services.map((service, idx) => {
-              const translateY = progress * idx * 180
-              const rotateX = progress * 10
-              const scale = 1 - progress * idx * 0.05
-              const zIndex = 3 - idx
-              
-              return (
-                <div
-                  key={idx}
-                  className="absolute transition-transform duration-75 ease-out"
-                  style={{
-                    transform: `translateY(${translateY}px) rotateX(${rotateX}deg) scale(${scale})`,
-                    zIndex: zIndex,
-                  }}
-                >
-                  <HomeServiceStackCard service={service} index={idx} />
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// Process Section with Cascading Animation
-function ProcessCascadingSection() {
-  const { sectionRef, progress } = useCascadingAnimation()
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  return (
-    <section 
-      ref={sectionRef}
-      className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center"
-    >
-      <div className="max-w-7xl mx-auto w-full">
-        <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
-              Your Journey From <span className="plastic-tube-text">Concept To Launch</span>
-            </h2>
-            <p className="text-lg md:text-xl text-text-secondary">
-              We've designed a streamlined process that gets your project from idea to reality 
-              with exceptional speed and quality, starting with a completely free prototype.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {/* Left side - description slides from left */}
-            <div
-              className="transition-transform duration-500 ease-out flex items-center"
-              style={{
-                transform: `translateX(${(1 - (mounted ? progress : 0)) * -1200}px)`,
-              }}
-            >
-              <div>
-                <h3 className="text-2xl font-display neumorphic-text-3d mb-4">
-                  Streamlined <span className="plastic-tube-text">Development</span>
-                </h3>
-                <p className="text-text-secondary">
-                  From discovery to deployment, our proven process eliminates waste and maximizes value. 
-                  No surprises, no delays, just results.
-                </p>
-              </div>
-            </div>
-            
-            {/* Right side - process cards slide from right */}
-            <div
-              className="transition-transform duration-500 ease-out"
-              style={{
-                transform: `translateX(${(1 - (mounted ? progress : 0)) * 1200}px)`,
-              }}
-            >
-              <div className="space-y-6">
-                {processSteps.map((step, idx) => (
-                  <ProcessCard key={idx} step={step} index={idx} />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// Why Different Section with Enhanced Stacked Deck
-function WhyDifferentEnhancedSection() {
-  const sectionRef = useRef<HTMLDivElement>(null)
-  const [progress, setProgress] = useState(0)
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
-
-    const handleScroll = () => {
-      if (!sectionRef.current) return
-
-      const rect = sectionRef.current.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      
-      const triggerPoint = viewportHeight * 0.9
-      const endPoint = viewportHeight * 0.1
-      
-      const rawProgress = Math.max(0, Math.min(1, (triggerPoint - rect.top) / (triggerPoint - endPoint)))
-      
-      // Apply cubic-bezier bounce easing
-      const t = rawProgress
-      const bounceProgress = 0.68 * t * t * t + (-0.55) * 3 * t * t * (1 - t) + 0.265 * 3 * t * (1 - t) * (1 - t) + 1.55 * (1 - t) * (1 - t) * (1 - t)
-      
-      setProgress(Math.max(0, Math.min(1, bounceProgress)))
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    handleScroll()
-    
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [mounted])
-
-  return (
-    <section 
-      ref={sectionRef}
-      className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center"
-    >
-      <div className="max-w-7xl mx-auto w-full">
-        <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
-              Why We're <span className="plastic-tube-text">Different</span>
-            </h2>
-            <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
-              Most agencies want to keep you dependent. We want to set you free.
-            </p>
-          </div>
-          
-          <div className="relative h-96 w-full flex items-center justify-center">
-            {whyDifferentItems.map((item, idx) => {
-              const translateX = (mounted ? progress : 0) * (idx - 1.5) * 200
-              const rotation = (mounted ? progress : 0) * (idx % 2 === 0 ? -5 : 5)
-              const scale = 1 + (mounted ? progress : 0) * idx * 0.02
-              const baseScale = 1 - idx * 0.05
-              const finalScale = baseScale * scale
-              const zIndex = 4 - idx
-              
-              return (
-                <div
-                  key={idx}
-                  className="absolute transition-transform ease-out"
-                  style={{
-                    transform: `translateX(${translateX}px) rotate(${rotation}deg) scale(${finalScale})`,
-                    zIndex: zIndex,
-                    transitionDuration: '0.5s',
-                    transitionTimingFunction: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)'
-                  }}
-                >
-                  <WhyDifferentStackCard item={item} index={idx} />
-                </div>
-              )
-            })}
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-}
-
-// Home Service Stack Card Component
-function HomeServiceStackCard({ service, index }: { service: any, index: number }) {
+// Service Stack Card Component
+function ServiceStackCard({ service, index }: { service: any, index: number }) {
   const gradients = [
     "bg-gradient-to-br from-[#e8d5f2] to-[#d0e8e3]",
     "bg-gradient-to-br from-[#d0e8e3] to-[#fce4d6]", 
@@ -595,26 +364,6 @@ function HomeServiceStackCard({ service, index }: { service: any, index: number 
         <Icon name={service.icon} className="text-4xl text-text-primary mb-3" />
         <h3 className="text-xl font-display neumorphic-text-3d mb-3">{service.title}</h3>
         <p className="text-sm text-text-secondary line-clamp-3">{service.description}</p>
-      </div>
-    </NeumorphicCard>
-  )
-}
-
-// Why Different Stack Card Component
-function WhyDifferentStackCard({ item, index }: { item: any, index: number }) {
-  const gradients = [
-    "bg-gradient-to-br from-[#e8d5f2] to-[#d0e8e3]",
-    "bg-gradient-to-br from-[#d0e8e3] to-[#fce4d6]", 
-    "bg-gradient-to-br from-[#fce4d6] to-[#d5e3f0]",
-    "bg-gradient-to-br from-[#d5e3f0] to-[#f2d5de]"
-  ]
-  
-  return (
-    <NeumorphicCard className={`w-80 h-48 ${gradients[index % gradients.length]}`}>
-      <div className="text-center p-6">
-        <Icon name={item.icon} className="text-4xl text-text-primary mb-3" />
-        <h3 className="text-xl font-display neumorphic-text-3d mb-3">{item.title}</h3>
-        <p className="text-sm text-text-secondary line-clamp-3">{item.description}</p>
       </div>
     </NeumorphicCard>
   )
@@ -665,4 +414,3 @@ function WhyDifferentCard({ item, index }: { item: any, index: number }) {
     </NeumorphicCard>
   )
 }
-
