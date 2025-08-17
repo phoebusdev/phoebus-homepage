@@ -6,7 +6,7 @@ import { ServiceCard } from '@/components/ServiceCard/ServiceCard'
 import { Navigation } from '@/components/Navigation/Navigation'
 import { Icon } from '@/components/Icon/Icon'
 import { ScrollReference } from '@/components/ScrollReference/ScrollReference'
-import { SmoothScrollZone } from '@/components/SmoothScrollZone/SmoothScrollZone'
+import { ResistanceZone } from '@/components/ResistanceZone/ResistanceZone'
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 
@@ -290,7 +290,7 @@ export default function HomePage() {
           </section>
 
           {/* Services Section - Generous side margins with extra breathing room */}
-          <SmoothScrollZone zoneId="services" slowFactor={0.4}>
+          <ResistanceZone zoneId="services" magnetStrength={0.08}>
             <section className="min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
               <div className="max-w-5xl mx-auto w-full">
                 {/* Scale down the entire content proportionally for breathing room */}
@@ -328,12 +328,15 @@ export default function HomePage() {
                 </div>
               </div>
             </section>
-          </SmoothScrollZone>
+          </ResistanceZone>
 
-          {/* Process Section - Generous side margins */}
-          <section className="min-h-screen py-20 md:py-24 lg:py-32 px-6 md:px-8 lg:px-12 flex items-center">
-            <div className="max-w-5xl mx-auto w-full">
-              <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center">
+          {/* Process Section - Refined standards applied */}
+          <ResistanceZone zoneId="process" magnetStrength={0.08}>
+            <section className="min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
+              <div className="max-w-5xl mx-auto w-full">
+                {/* Scale down the entire content proportionally for breathing room */}
+                <div className="transform scale-75 origin-center">
+                  <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center">
                 <Parallax translateY={[-15, 15]}>
                   <div>
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
@@ -356,15 +359,20 @@ export default function HomePage() {
                     </Parallax>
                   ))}
                 </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </ResistanceZone>
 
-          {/* Why We're Different Section - Generous side margins */}
-          <section className="min-h-screen py-20 md:py-24 lg:py-32 px-6 md:px-8 lg:px-12 flex items-center">
-            <div className="max-w-5xl mx-auto w-full">
-              <Parallax translateY={[-20, 10]}>
-                <div className="text-center mb-12 md:mb-16">
+          {/* Why We're Different Section - Refined standards applied */}
+          <ResistanceZone zoneId="why-different" magnetStrength={0.08}>
+            <section className="min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
+              <div className="max-w-5xl mx-auto w-full">
+                {/* Scale down the entire content proportionally for breathing room */}
+                <div className="transform scale-75 origin-center">
+                  <Parallax translateY={[-20, 10]}>
+                    <div className="text-center mb-12 md:mb-16">
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
                     Why We're <span className="plastic-tube-text">Different</span>
                   </h2>
@@ -374,7 +382,7 @@ export default function HomePage() {
                 </div>
               </Parallax>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                 {whyDifferentItems.map((item, idx) => (
                   <Parallax 
                     key={idx}
@@ -385,8 +393,10 @@ export default function HomePage() {
                   </Parallax>
                 ))}
               </div>
-            </div>
-          </section>
+                </div>
+              </div>
+            </section>
+          </ResistanceZone>
         </div>
         
         {/* Scroll Reference Tool */}
