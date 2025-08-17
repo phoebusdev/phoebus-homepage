@@ -15,6 +15,7 @@
 
   html {
     scroll-behavior: smooth;
+    scroll-snap-type: y proximity;
   }
 
   body {
@@ -338,10 +339,20 @@
   }
 }
 
+/* Scroll Snap Sections */
+.scroll-snap-section {
+  scroll-snap-align: center;
+  scroll-snap-stop: normal;
+}
+
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-snap-type: none;
   }
 }

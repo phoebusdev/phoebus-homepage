@@ -16,6 +16,10 @@ export function ResistanceZone({ children, magnetStrength = 0.08, zoneId }: Magn
   const magneticCenter = useRef<number>(0)
   const lastUserScroll = useRef<number>(0)
   const scrollVelocity = useRef<number>(0)
+  const hasSnapped = useRef<boolean>(false)
+  const decelerationActive = useRef<boolean>(false)
+  const isScrolling = useRef<boolean>(false)
+  const scrollTimeout = useRef<NodeJS.Timeout>()
 
   useEffect(() => {
     let observer: IntersectionObserver
@@ -27,29 +31,48 @@ export function ResistanceZone({ children, magnetStrength = 0.08, zoneId }: Magn
     const updateMagneticScroll = () => {
       const currentScroll = window.scrollY
       
+      // Don't interfere if we're already programmatically scrolling
+      if (isScrolling.current) {
+        animationRef.current = requestAnimationFrame(updateMagneticScroll)
+        return
+      }
+      
       if (isInMagneticZone.current) {
         // Calculate scroll velocity
         scrollVelocity.current = currentScroll - lastUserScroll.current
         lastUserScroll.current = currentScroll
         
-        // If scroll velocity is low (user stopped scrolling), apply magnetic pull
-        if (Math.abs(scrollVelocity.current) < 0.5) {
-          // Calculate distance from magnetic center
-          const distanceFromCenter = Math.abs(currentScroll - magneticCenter.current)
-          const maxMagneticDistance = window.innerHeight * 0.3 // 30% of viewport
-          
-          // Apply magnetic pull if within range
-          if (distanceFromCenter < maxMagneticDistance) {
-            const pullStrength = (1 - distanceFromCenter / maxMagneticDistance) * magnetStrength
-            targetScrollY.current = lerp(currentScroll, magneticCenter.current, pullStrength)
+        // Calculate distance from magnetic center
+        const distanceFromCenter = Math.abs(currentScroll - magneticCenter.current)
+        const snapDistance = window.innerHeight * 0.1 // Smaller snap zone for precision
+        
+        // Reset snap flag when far from center
+        if (distanceFromCenter > window.innerHeight * 0.25) {
+          hasSnapped.current = false
+          decelerationActive.current = false
+        }
+        
+        // Only snap when velocity is very low and close to center
+        if (Math.abs(scrollVelocity.current) < 0.5 && !hasSnapped.current && !isScrolling.current) {
+          if (distanceFromCenter < snapDistance && distanceFromCenter > 5) {
+            hasSnapped.current = true
+            isScrolling.current = true
             
-            // Smoothly scroll to magnetic target
-            if (Math.abs(targetScrollY.current - currentScroll) > 1) {
-              window.scrollTo({
-                top: targetScrollY.current,
-                behavior: 'auto'
-              })
+            // Clear any existing timeout
+            if (scrollTimeout.current) {
+              clearTimeout(scrollTimeout.current)
             }
+            
+            // Single, clean snap to perfect position
+            window.scrollTo({
+              top: magneticCenter.current,
+              behavior: 'smooth'
+            })
+            
+            // Reset scrolling flag after animation completes
+            scrollTimeout.current = setTimeout(() => {
+              isScrolling.current = false
+            }, 300) // Wait for smooth scroll to complete
           }
         }
       }
@@ -99,6 +122,9 @@ export function ResistanceZone({ children, magnetStrength = 0.08, zoneId }: Magn
       }
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current)
+      }
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current)
       }
     }
   }, [magnetStrength, zoneId])
