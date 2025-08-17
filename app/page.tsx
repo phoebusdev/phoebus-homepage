@@ -5,6 +5,8 @@ import { NeumorphicCard } from '@/components/NeumorphicCard/NeumorphicCard'
 import { ServiceCard } from '@/components/ServiceCard/ServiceCard'
 import { Navigation } from '@/components/Navigation/Navigation'
 import { Icon } from '@/components/Icon/Icon'
+import { ScrollReference } from '@/components/ScrollReference/ScrollReference'
+import { SmoothScrollZone } from '@/components/SmoothScrollZone/SmoothScrollZone'
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
 
@@ -252,23 +254,23 @@ export default function HomePage() {
         </Parallax>
 
         <div className="relative z-10">
-          {/* Hero Section */}
-          <section className="relative pt-4 pb-12 md:pt-6 md:pb-16 lg:pt-8 lg:pb-20 px-4 w-full">
-            <div className="max-w-6xl mx-auto w-full">
+          {/* Hero Section - Generous side margins */}
+          <section className="relative min-h-screen py-20 md:py-24 lg:py-32 px-6 md:px-8 lg:px-12 w-full flex items-center">
+            <div className="max-w-5xl mx-auto w-full">
               <Parallax 
                 translateY={[-30, 30]} 
                 scale={[1.05, 0.95]}
               >
                 <div className="hero-neumorphic-card text-center">
                   <div className="relative z-10">
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-relaxed font-display break-words neumorphic-text-3d mb-4">
+                    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-relaxed font-display break-words neumorphic-text-3d mb-6">
                       <span className="plastic-tube-text">Digital Products</span>
                       <br />
                       <span className="plastic-tube-text">Built Right</span>
                       <br />
                       <span className="plastic-tube-text">Delivered Fast</span>
                     </h1>
-                    <p className="text-lg sm:text-xl text-text-secondary max-w-4xl mx-auto mb-8">
+                    <p className="text-xl sm:text-2xl text-text-secondary max-w-3xl mx-auto mb-8">
                       We build websites and apps that work <span className="matter-plastic-light">exactly as promised</span>,
                       delivered exactly when promised. No hidden fees, no project drag-outs, no vendor lock-in.
                       Just clean code, clear timelines, and <span className="matter-plastic-light">complete ownership</span>.
@@ -287,27 +289,30 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Services Section */}
-          <section className="py-20 px-4">
-            <div className="max-w-6xl mx-auto">
-              <Parallax translateY={[-20, 20]}>
-                <div className="text-center mb-16">
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
-                    Products That <span className="plastic-tube-text">Work</span>, Not Projects That Drag On
-                  </h2>
-                  <p className="text-lg text-text-secondary max-w-4xl mx-auto">
-                    We build lean but future-proof. Every project starts minimal but architected for easy expansion. 
-                    No rebuilds needed when you want to add features later.
-                  </p>
-                </div>
-              </Parallax>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {/* Services Section - Generous side margins with extra breathing room */}
+          <SmoothScrollZone zoneId="services" slowFactor={0.4}>
+            <section className="min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
+              <div className="max-w-5xl mx-auto w-full">
+                {/* Scale down the entire content proportionally for breathing room */}
+                <div className="transform scale-75 origin-center">
+                <Parallax translateY={[-15, 15]}>
+                  <div className="text-center mb-12 md:mb-16">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
+                      Products That <span className="plastic-tube-text">Work</span>, Not Projects That Drag On
+                    </h2>
+                    <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
+                      We build lean but future-proof. Every project starts minimal but architected for easy expansion. 
+                      No rebuilds needed when you want to add features later.
+                    </p>
+                  </div>
+                </Parallax>
+                
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                 {services.map((service, idx) => (
                   <Parallax 
                     key={idx}
-                    translateY={[50, -10]} 
-                    translateX={idx % 2 === 0 ? [-10, 10] : [10, -10]}
+                    translateY={[30, -5]} 
+                    translateX={idx % 2 === 0 ? [-5, 5] : [5, -5]}
                     className="h-full"
                   >
                     <ServiceCard
@@ -319,20 +324,22 @@ export default function HomePage() {
                     />
                   </Parallax>
                 ))}
+                </div>
+                </div>
               </div>
-            </div>
-          </section>
+            </section>
+          </SmoothScrollZone>
 
-          {/* Process Section */}
-          <section className="py-20 px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid md:grid-cols-2 gap-12 items-center">
+          {/* Process Section - Generous side margins */}
+          <section className="min-h-screen py-20 md:py-24 lg:py-32 px-6 md:px-8 lg:px-12 flex items-center">
+            <div className="max-w-5xl mx-auto w-full">
+              <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center">
                 <Parallax translateY={[-15, 15]}>
                   <div>
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
                       Your Journey From <span className="plastic-tube-text">Concept To Launch</span>
                     </h2>
-                    <p className="text-lg text-text-secondary">
+                    <p className="text-lg md:text-xl text-text-secondary">
                       We've designed a streamlined process that gets your project from idea to reality 
                       with exceptional speed and quality, starting with a completely free prototype.
                     </p>
@@ -343,7 +350,7 @@ export default function HomePage() {
                   {processSteps.map((step, idx) => (
                     <Parallax 
                       key={idx}
-                      translateX={idx % 2 === 0 ? [-40, 0] : [40, 0]}
+                      translateX={idx % 2 === 0 ? [-15, 0] : [15, 0]}
                     >
                       <ProcessCard step={step} index={idx} />
                     </Parallax>
@@ -353,25 +360,25 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Why We're Different Section */}
-          <section className="py-20 px-4">
-            <div className="max-w-6xl mx-auto">
-              <Parallax translateY={[-25, 15]}>
-                <div className="text-center mb-16">
+          {/* Why We're Different Section - Generous side margins */}
+          <section className="min-h-screen py-20 md:py-24 lg:py-32 px-6 md:px-8 lg:px-12 flex items-center">
+            <div className="max-w-5xl mx-auto w-full">
+              <Parallax translateY={[-20, 10]}>
+                <div className="text-center mb-12 md:mb-16">
                   <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
                     Why We're <span className="plastic-tube-text">Different</span>
                   </h2>
-                  <p className="text-lg text-text-secondary max-w-2xl mx-auto">
+                  <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
                     Most agencies want to keep you dependent. We want to set you free.
                   </p>
                 </div>
               </Parallax>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 {whyDifferentItems.map((item, idx) => (
                   <Parallax 
                     key={idx}
-                    translateY={[40 + idx * 10, -20 - idx * 5]}
+                    translateY={[20 + idx * 5, -10 - idx * 2]}
                     easing="easeOutQuad"
                   >
                     <WhyDifferentCard item={item} index={idx} />
@@ -381,6 +388,9 @@ export default function HomePage() {
             </div>
           </section>
         </div>
+        
+        {/* Scroll Reference Tool */}
+        <ScrollReference />
       </main>
     </ParallaxProvider>
   )
