@@ -8,6 +8,7 @@ import { Icon } from '@/components/Icon/Icon'
 import { ScrollDebugTool } from '@/components/ScrollDebugTool/ScrollDebugTool'
 import { ScrollDebugProvider } from '@/components/ScrollDebugContext/ScrollDebugContext'
 import { DebugParallax, StaticParallax } from '@/components/DebugParallax/DebugParallax'
+import { DualParallax } from '@/components/DualParallax/DualParallax'
 import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 
@@ -87,43 +88,11 @@ const whyDifferentItems = [
   }
 ]
 
-// Custom hook for stacked deck animation (exactly like process page)
-function useStackedDeckAnimation() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [progress, setProgress] = useState(0)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return
-
-      const rect = containerRef.current.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      
-      const triggerPoint = viewportHeight * 0.5
-      const animationRange = viewportHeight * 1.5
-      
-      const scrollFromTrigger = triggerPoint - rect.top
-      const rawProgress = Math.max(0, Math.min(1, scrollFromTrigger / animationRange))
-      
-      const easedProgress = rawProgress * rawProgress * (3 - 2 * rawProgress)
-      
-      setProgress(easedProgress)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    handleScroll()
-    
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  return { containerRef, progress }
-}
 
 
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const { containerRef, progress } = useStackedDeckAnimation()
 
   useEffect(() => {
     setMounted(true)
@@ -198,7 +167,7 @@ export default function HomePage() {
 
         <div className="relative z-10">
           {/* Hero Section - Load-Based Card Collage Animation */}
-          <section className="min-h-screen py-4 md:py-6 lg:py-8 px-6 md:px-8 lg:px-12 flex items-center">
+          <section className="scroll-snap-section min-h-screen py-4 md:py-6 lg:py-8 px-6 md:px-8 lg:px-12 flex items-center" data-section="hero">
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
                 <div className="relative">
@@ -454,60 +423,62 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* Services Stacked Deck Animation */}
-          <section 
-            ref={containerRef}
-            className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center"
-          >
+          {/* Services Section - Standardized Layout */}
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="services">
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
-                <div className="text-center mb-16">
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
-                    Products That <span className="plastic-tube-text">Work</span>, Not Projects That Drag On
-                  </h2>
-                  <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
-                    We build lean but future-proof. Every project starts minimal but architected for easy expansion. 
-                    No rebuilds needed when you want to add features later.
-                  </p>
-                </div>
+                <DebugParallax 
+                  debugId="services-title"
+                  translateX={[0, 0]}
+                  translateY={[0, 0]}
+                  rotate={[0, 0]}
+                  startScroll={100}
+                  endScroll={800}
+                >
+                  <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
+                      Products That <span className="plastic-tube-text">Work</span>, Not Projects That Drag On
+                    </h2>
+                    <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
+                      We build lean but future-proof. Every project starts minimal but architected for easy expansion. 
+                      No rebuilds needed when you want to add features later.
+                    </p>
+                  </div>
+                </DebugParallax>
                 
-                <div className="relative h-96 flex items-center justify-center">
-                  {services.map((service, idx) => {
-                    const translateY = progress * idx * 180
-                    const rotateX = progress * 10
-                    const scale = 1 - progress * idx * 0.05
-                    const zIndex = 3 - idx
-                    
-                    return (
-                      <div
-                        key={idx}
-                        className="absolute transition-transform duration-75 ease-out"
-                        style={{
-                          transform: `translateY(${translateY}px) rotateX(${rotateX}deg) scale(${scale})`,
-                          zIndex: zIndex,
-                        }}
-                      >
-                        <NeumorphicCard className={`w-80 h-48 ${['bg-gradient-to-br from-[#e8d5f2] to-[#d0e8e3]', 'bg-gradient-to-br from-[#d0e8e3] to-[#fce4d6]', 'bg-gradient-to-br from-[#fce4d6] to-[#d5e3f0]'][idx % 3]}`}>
-                          <div className="text-center p-6">
-                            <Icon name={service.icon} className="text-4xl text-text-primary mb-3" />
-                            <h3 className="text-xl font-display neumorphic-text-3d mb-3">{service.title}</h3>
-                            <p className="text-sm text-text-secondary line-clamp-3">{service.description}</p>
-                          </div>
-                        </NeumorphicCard>
-                      </div>
-                    )
-                  })}
+                {/* Services Cards Grid - Dual Animation System */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                  {services.map((service, idx) => (
+                    <DualParallax
+                      key={idx}
+                      entryDebugId={`services-card-${idx}-entry`}
+                      exitDebugId={`services-card-${idx}-exit`}
+                    >
+                      <NeumorphicCard className={`h-48 ${['bg-gradient-to-br from-[#e8d5f2] to-[#d0e8e3]', 'bg-gradient-to-br from-[#d0e8e3] to-[#fce4d6]', 'bg-gradient-to-br from-[#fce4d6] to-[#d5e3f0]'][idx % 3]}`}>
+                        <div className="text-center p-6">
+                          <Icon name={service.icon} className="text-4xl text-text-primary mb-3" />
+                          <h3 className="text-xl font-display neumorphic-text-3d mb-3">{service.title}</h3>
+                          <p className="text-sm text-text-secondary line-clamp-3">{service.description}</p>
+                        </div>
+                      </NeumorphicCard>
+                    </DualParallax>
+                  ))}
                 </div>
               </div>
             </div>
           </section>
 
           {/* Process Section - Regular Layout */}
-          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="process">
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
                 <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center">
-                  <StaticParallax translateY={[-15, 15]}>
+                  <DebugParallax 
+                    debugId="process-title"
+                    translateY={[-15, 15]}
+                    startScroll={100}
+                    endScroll={800}
+                  >
                     <div>
                       <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
                         Your Journey From <span className="plastic-tube-text">Concept To Launch</span>
@@ -517,13 +488,16 @@ export default function HomePage() {
                         with exceptional speed and quality, starting with a completely free prototype.
                       </p>
                     </div>
-                  </StaticParallax>
+                  </DebugParallax>
                   
                   <div className="space-y-6">
                     {processSteps.map((step, idx) => (
-                      <StaticParallax 
+                      <DebugParallax 
                         key={idx}
+                        debugId={`process-step-${idx}`}
                         translateX={idx % 2 === 0 ? [-15, 0] : [15, 0]}
+                        startScroll={100}
+                        endScroll={800}
                       >
                         <div className="card-solution4 expanded">
                           <div className="icon-neumorphic">
@@ -538,7 +512,7 @@ export default function HomePage() {
                             </p>
                           </div>
                         </div>
-                      </StaticParallax>
+                      </DebugParallax>
                     ))}
                   </div>
                 </div>
@@ -547,10 +521,15 @@ export default function HomePage() {
           </section>
 
           {/* Why Different Section - Grid Layout */}
-          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="why-different">
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
-                <StaticParallax translateY={[-20, 10]}>
+                <DebugParallax 
+                  debugId="why-different-title"
+                  translateY={[-20, 10]}
+                  startScroll={100}
+                  endScroll={800}
+                >
                   <div className="text-center mb-12 md:mb-16">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
                       Why We're <span className="plastic-tube-text">Different</span>
@@ -559,19 +538,175 @@ export default function HomePage() {
                       Most agencies want to keep you dependent. We want to set you free.
                     </p>
                   </div>
-                </StaticParallax>
+                </DebugParallax>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                   {whyDifferentItems.map((item, idx) => (
-                    <StaticParallax 
+                    <DebugParallax 
                       key={idx}
+                      debugId={`why-different-${idx}`}
                       translateY={[20 + idx * 5, -10 - idx * 2]}
-                      easing="easeOutQuad"
+                      startScroll={100}
+                      endScroll={800}
                     >
                       <WhyDifferentCard item={item} index={idx} />
-                    </StaticParallax>
+                    </DebugParallax>
                   ))}
                 </div>
+              </div>
+            </div>
+          </section>
+
+          {/* About Section */}
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="about">
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+                <DebugParallax 
+                  debugId="about-title"
+                  translateX={[0, 0]}
+                  translateY={[0, 0]}
+                  rotate={[0, 0]}
+                  startScroll={4100}
+                  endScroll={4300}
+                >
+                  <div className="text-center mb-12 md:mb-16">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
+                      Why Choose <span className="plastic-tube-text">Phoebus Digital?</span>
+                    </h2>
+                  </div>
+                </DebugParallax>
+                
+                {/* About Content Grid */}
+                <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                  <DebugParallax 
+                    debugId="about-content"
+                    translateX={[0, 0]}
+                    translateY={[0, 0]}
+                    rotate={[0, 0]}
+                    startScroll={4150}
+                    endScroll={4350}
+                  >
+                    <div className="space-y-6">
+                      <p className="text-lg md:text-xl text-text-secondary">
+                        Phoebus Digital was founded with a simple mission: provide exceptional digital solutions to our personal network with unprecedented speed and value.
+                      </p>
+                      <p className="text-lg md:text-xl text-text-secondary">
+                        By limiting our client base to our extended network, we can maintain the highest standards of quality while offering exceptional pricing and turnaround times that traditional agencies simply cannot match.
+                      </p>
+                      <div className="pt-4">
+                        <NeumorphicButton>
+                          Start Your Project Today
+                        </NeumorphicButton>
+                      </div>
+                    </div>
+                  </DebugParallax>
+                  
+                  <DebugParallax 
+                    debugId="about-features"
+                    translateX={[0, 0]}
+                    translateY={[0, 0]}
+                    rotate={[0, 0]}
+                    startScroll={4200}
+                    endScroll={4400}
+                  >
+                    <NeumorphicCard className="p-8">
+                      <div className="space-y-4">
+                        {[
+                          "Years of industry experience across multiple sectors",
+                          "Exclusive focus on our personal network for higher quality",
+                          "Streamlined development methodology for faster delivery",
+                          "Passion for creating elegant, high-performing digital solutions",
+                          "Commitment to transparent communication throughout the process"
+                        ].map((feature, idx) => (
+                          <div key={idx} className="flex items-start gap-3">
+                            <Icon name="check_circle" className="text-xl text-sage-green mt-1 flex-shrink-0" />
+                            <span className="text-text-secondary">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </NeumorphicCard>
+                  </DebugParallax>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Contact Section */}
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="contact">
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+                <DebugParallax 
+                  debugId="contact-title"
+                  translateX={[0, 0]}
+                  translateY={[0, 0]}
+                  rotate={[0, 0]}
+                  startScroll={4800}
+                  endScroll={5000}
+                >
+                  <div className="text-center mb-12 md:mb-16">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
+                      Get Your <span className="plastic-tube-text">Free Prototype</span>
+                    </h2>
+                    <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
+                      Ready to transform your vision into reality? Start with a completely free prototype and see how our streamlined approach can bring your digital dreams to life.
+                    </p>
+                  </div>
+                </DebugParallax>
+                
+                {/* Contact CTA Cards */}
+                <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                  <DebugParallax 
+                    debugId="contact-cta-1"
+                    translateX={[0, 0]}
+                    translateY={[0, 0]}
+                    rotate={[0, 0]}
+                    startScroll={4850}
+                    endScroll={5050}
+                  >
+                    <NeumorphicCard className="text-center p-8 h-full">
+                      <Icon name="mail" className="text-4xl text-salmon-pink mb-4" />
+                      <h3 className="text-xl font-display neumorphic-text-3d mb-3">Email Us</h3>
+                      <p className="text-text-secondary mb-4">For detailed inquiries and project discussions</p>
+                      <p className="text-sm font-mono text-text-primary bg-surface-secondary px-3 py-2 rounded-lg">
+                        phoebusdigitalsolutions@gmail.com
+                      </p>
+                    </NeumorphicCard>
+                  </DebugParallax>
+                  
+                  <DebugParallax 
+                    debugId="contact-cta-2"
+                    translateX={[0, 0]}
+                    translateY={[0, 0]}
+                    rotate={[0, 0]}
+                    startScroll={4900}
+                    endScroll={5100}
+                  >
+                    <NeumorphicCard className="text-center p-8 h-full">
+                      <Icon name="phone" className="text-4xl text-sage-green mb-4" />
+                      <h3 className="text-xl font-display neumorphic-text-3d mb-3">Call Us</h3>
+                      <p className="text-text-secondary mb-4">For immediate assistance and consultations</p>
+                      <p className="text-sm font-mono text-text-primary bg-surface-secondary px-3 py-2 rounded-lg">
+                        +1 (416) 768-1201
+                      </p>
+                    </NeumorphicCard>
+                  </DebugParallax>
+                </div>
+                
+                {/* Final CTA */}
+                <DebugParallax 
+                  debugId="contact-final-cta"
+                  translateX={[0, 0]}
+                  translateY={[0, 0]}
+                  rotate={[0, 0]}
+                  startScroll={4950}
+                  endScroll={5150}
+                >
+                  <div className="text-center mt-12">
+                    <NeumorphicButton>
+                      Get Your Free Prototype
+                    </NeumorphicButton>
+                  </div>
+                </DebugParallax>
               </div>
             </div>
           </section>

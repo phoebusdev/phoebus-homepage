@@ -436,3 +436,22 @@
   font-size: 12px;
   font-weight: 500;
 }
+
+/* Scroll Snap Controls Section */
+.scrollSnapSection {
+  margin-bottom: 16px;
+  padding: 16px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.select {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  font-size: 12px;
+  min-width: 120px;
+  width: 100%;
+}
