@@ -165,6 +165,7 @@ export default function PricingPage() {
             </div>
           </section>
         </div>
+        <Footer />
       </main>
     )
   }
@@ -291,6 +292,7 @@ export default function PricingPage() {
             </div>
           </section>
         </div>
+        <Footer />
       </main>
     </ParallaxProvider>
   )

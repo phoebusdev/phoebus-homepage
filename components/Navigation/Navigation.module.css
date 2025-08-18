@@ -1,6 +1,7 @@
 /* Navigation Neumorphic Styling */
 .navigation {
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 50;
   width: 100%;
   padding: 0.75rem 1rem;

@@ -142,6 +142,7 @@ export default function AboutPage() {
             </div>
           </section>
         </div>
+        <Footer />
       </main>
     )
   }
@@ -299,6 +300,7 @@ export default function AboutPage() {
             </div>
           </section>
         </div>
+        <Footer />
       </main>
     </ParallaxProvider>
   )

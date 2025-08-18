@@ -6,6 +6,7 @@ import { ServiceCard } from '@/components/ServiceCard/ServiceCard'
 import { Navigation } from '@/components/Navigation/Navigation'
 import { Footer } from '@/components/Footer/Footer'
 import { Icon } from '@/components/Icon/Icon'
+import { ScrollDebugTool } from '@/components/ScrollDebugTool/ScrollDebugTool'
 import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 
@@ -150,6 +151,40 @@ function useStackedDeckAnimation() {
   return { containerRef, progress }
 }
 
+// Custom hook for hero card scatter animation
+function useHeroScatterAnimation() {
+  const heroRef = useRef<HTMLDivElement>(null)
+  const [scatterProgress, setScatterProgress] = useState(0)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!heroRef.current) return
+
+      const rect = heroRef.current.getBoundingClientRect()
+      const viewportHeight = window.innerHeight
+      
+      // Start scattering when hero section approaches the top of viewport
+      const triggerPoint = viewportHeight * 0.8 // Start when 80% up from bottom
+      const animationRange = viewportHeight * 0.6 // Complete over 60% of viewport height
+      
+      const scrollFromTrigger = triggerPoint - rect.bottom
+      const rawProgress = Math.max(0, Math.min(1, scrollFromTrigger / animationRange))
+      
+      // Ease out cubic for smooth deceleration
+      const easedProgress = 1 - Math.pow(1 - rawProgress, 3)
+      
+      setScatterProgress(easedProgress)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  return { heroRef, scatterProgress }
+}
+
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -167,25 +202,45 @@ export default function HomePage() {
     return (
       <main className="min-h-screen relative">
         <Navigation />
-        <Footer />
         <div className="relative z-10">
-          <section className="relative pt-4 pb-12 md:pt-6 md:pb-16 lg:pt-8 lg:pb-20 px-4 w-full">
+          <section className="relative pt-8 pb-12 md:pt-10 md:pb-16 lg:pt-12 lg:pb-20 px-4 w-full">
             <div className="max-w-6xl mx-auto w-full">
-              <div className="hero-neumorphic-card text-center">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-relaxed font-display break-words neumorphic-text-3d mb-4">
-                  <span className="plastic-tube-text">Digital Products</span>
-                  <br />
-                  <span className="plastic-tube-text">Built Right</span>
-                  <br />
-                  <span className="plastic-tube-text">Delivered Fast</span>
-                </h1>
-                <p className="text-lg sm:text-xl text-text-secondary max-w-4xl mx-auto mb-8">
-                  We build websites and apps that work exactly as promised, delivered exactly when promised.
-                </p>
+              <div className="transform scale-75 origin-center">
+                <div className="grid grid-cols-12 gap-3">
+                  <div className="col-span-12 md:col-span-7">
+                    <div className="hero-neumorphic-card-split">
+                      <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display neumorphic-text-3d">
+                        <span className="plastic-tube-text">Digital Products</span>
+                      </h1>
+                    </div>
+                  </div>
+                  <div className="col-span-12 md:col-span-5">
+                    <div className="hero-neumorphic-card-split">
+                      <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d">
+                        <span className="plastic-tube-text">Built Right</span>
+                      </h1>
+                    </div>
+                  </div>
+                  <div className="col-span-12 md:col-span-8">
+                    <div className="hero-neumorphic-card-split">
+                      <p className="text-lg sm:text-xl text-text-secondary">
+                        We build websites and apps that work exactly as promised, delivered exactly when promised.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-span-12 md:col-span-4">
+                    <div className="hero-neumorphic-card-split">
+                      <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d">
+                        <span className="plastic-tube-text">Delivered Fast</span>
+                      </h1>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
         </div>
+        <Footer />
       </main>
     )
   }
@@ -197,7 +252,6 @@ export default function HomePage() {
     >
       <main className="min-h-screen relative">
         <Navigation />
-        <Footer />
 
         <Parallax 
           translateY={[-20, 20]}
@@ -207,39 +261,250 @@ export default function HomePage() {
         </Parallax>
 
         <div className="relative z-10">
-          {/* Hero Section */}
-          <section className="min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
+          {/* Hero Section - Load-Based Card Collage Animation */}
+          <section className="min-h-screen py-4 md:py-6 lg:py-8 px-6 md:px-8 lg:px-12 flex items-center">
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
-                <Parallax 
-                  translateY={[-30, 30]} 
-                  scale={[1.05, 0.95]}
-                >
-                  <div className="hero-neumorphic-card text-center">
-                    <div className="relative z-10">
-                      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-relaxed font-display break-words neumorphic-text-3d mb-6">
-                        <span className="plastic-tube-text">Digital Products</span>
-                        <br />
-                        <span className="plastic-tube-text">Built Right</span>
-                        <br />
-                        <span className="plastic-tube-text">Delivered Fast</span>
-                      </h1>
-                      <p className="text-xl sm:text-2xl text-text-secondary max-w-3xl mx-auto mb-8">
-                        We build websites and apps that work <span className="matter-plastic-light">exactly as promised</span>,
-                        delivered exactly when promised. No hidden fees, no project drag-outs, no vendor lock-in.
-                        Just clean code, clear timelines, and <span className="matter-plastic-light">complete ownership</span>.
-                      </p>
-                      <div className="flex gap-4 flex-wrap justify-center">
+                <div className="relative">
+                  {/* Card Collage Layout - Row by Row with Flexible Sizing */}
+                  <div className="space-y-4 mb-8">
+                    {/* Row 1: Digital Products + No hidden fees */}
+                    <div className="grid grid-cols-12 gap-4">
+                      {/* Digital Products - auto-sized to content */}
+                      <div className="col-span-12 md:col-span-7">
+                        <Parallax 
+                          translateX={[0, -80]}
+                          translateY={[0, -30]}
+                          rotate={[0, -10]}
+                          startScroll={100}
+                          endScroll={800}
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both',
+                              '--from-x': '-60px',
+                              '--from-y': '-40px',
+                              '--from-rotate': '-8deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split">
+                              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display neumorphic-text-3d">
+                                <span className="plastic-tube-text">Digital Products</span>
+                              </h1>
+                            </div>
+                          </div>
+                        </Parallax>
+                      </div>
+                      {/* No hidden fees - fills remainder */}
+                      <div className="col-span-12 md:col-span-5">
+                        <Parallax 
+                          translateX={[0, 60]}
+                          translateY={[0, -30]}
+                          rotate={[0, 8]}
+                          startScroll={100}
+                          endScroll={800}
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both',
+                              '--from-x': '40px',
+                              '--from-y': '-30px',
+                              '--from-rotate': '5deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split text-center h-full flex flex-col justify-center">
+                              <Icon name="block" className="text-4xl mb-3 text-bronze" />
+                              <p className="text-base text-text-secondary font-medium">No hidden fees</p>
+                            </div>
+                          </div>
+                        </Parallax>
+                      </div>
+                    </div>
+
+                    {/* Row 2: Built Right + No drag-outs */}
+                    <div className="grid grid-cols-12 gap-4">
+                      {/* Built Right - auto-sized to content */}
+                      <div className="col-span-12 md:col-span-6">
+                        <Parallax 
+                          translateX={[0, -60]}
+                          translateY={[0, -20]}
+                          rotate={[0, -5]}
+                          startScroll={100}
+                          endScroll={800}
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both',
+                              '--from-x': '-40px',
+                              '--from-y': '-20px',
+                              '--from-rotate': '-5deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split">
+                              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display neumorphic-text-3d">
+                                <span className="plastic-tube-text">Built Right</span>
+                              </h1>
+                            </div>
+                          </div>
+                        </Parallax>
+                      </div>
+                      {/* No drag-outs - fills remainder */}
+                      <div className="col-span-12 md:col-span-6">
+                        <Parallax 
+                          translateX={[0, 80]}
+                          translateY={[0, -20]}
+                          rotate={[0, 10]}
+                          startScroll={100}
+                          endScroll={800}
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both',
+                              '--from-x': '50px',
+                              '--from-y': '-20px',
+                              '--from-rotate': '8deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split text-center h-full flex flex-col justify-center">
+                              <Icon name="schedule" className="text-4xl mb-3 text-sage-green" />
+                              <p className="text-base text-text-secondary font-medium">No drag-outs</p>
+                            </div>
+                          </div>
+                        </Parallax>
+                      </div>
+                    </div>
+
+                    {/* Row 3: Delivered Fast + No vendor lock-in */}
+                    <div className="grid grid-cols-12 gap-4">
+                      {/* Delivered Fast - auto-sized to content */}
+                      <div className="col-span-12 md:col-span-8">
+                        <Parallax 
+                          translateX={[0, -50]}
+                          translateY={[0, -10]}
+                          rotate={[0, -3]}
+                          startScroll={100}
+                          endScroll={800}
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both',
+                              '--from-x': '-30px',
+                              '--from-y': '-10px',
+                              '--from-rotate': '-3deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split">
+                              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display neumorphic-text-3d">
+                                <span className="plastic-tube-text">Delivered Fast</span>
+                              </h1>
+                            </div>
+                          </div>
+                        </Parallax>
+                      </div>
+                      {/* No vendor lock-in - fills remainder */}
+                      <div className="col-span-12 md:col-span-4">
+                        <Parallax 
+                          translateX={[0, 70]}
+                          translateY={[0, -10]}
+                          rotate={[0, 5]}
+                          startScroll={100}
+                          endScroll={800}
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both',
+                              '--from-x': '60px',
+                              '--from-y': '-10px',
+                              '--from-rotate': '3deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split text-center h-full flex flex-col justify-center">
+                              <Icon name="lock_open" className="text-4xl mb-3 text-salmon-pink" />
+                              <p className="text-base text-text-secondary font-medium">No vendor lock-in</p>
+                            </div>
+                          </div>
+                        </Parallax>
+                      </div>
+                    </div>
+
+                    {/* Row 4: Description - Full width */}
+                    <div className="grid grid-cols-12 gap-4">
+                      <div className="col-span-12">
+                        <Parallax 
+                          translateY={[0, 20]}
+                          startScroll={100}
+                          endScroll={800}
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.7s both',
+                              '--from-x': '0px',
+                              '--from-y': '40px',
+                              '--from-rotate': '0deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split text-center">
+                              <p className="text-lg sm:text-xl md:text-2xl text-text-secondary max-w-4xl mx-auto">
+                                We build websites and apps that work <span className="matter-plastic-light">exactly as promised</span>,
+                                delivered exactly when promised.
+                              </p>
+                            </div>
+                          </div>
+                        </Parallax>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* CTA Buttons - Animate in from bottom */}
+                  <div className="flex gap-4 flex-wrap justify-center">
+                    <Parallax 
+                      translateX={[0, -50]}
+                      translateY={[0, 25]}
+                      startScroll={100}
+                      endScroll={800}
+                    >
+                      <div 
+                        style={{
+                          animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.8s both',
+                          '--from-x': '-30px',
+                          '--from-y': '40px',
+                          '--from-rotate': '0deg'
+                        } as React.CSSProperties}
+                      >
                         <NeumorphicButton>
                           Get Your Free Prototype
                         </NeumorphicButton>
+                      </div>
+                    </Parallax>
+                    
+                    <Parallax 
+                      translateX={[0, 50]}
+                      translateY={[0, 25]}
+                      startScroll={100}
+                      endScroll={800}
+                    >
+                      <div 
+                        style={{
+                          animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.9s both',
+                          '--from-x': '30px',
+                          '--from-y': '40px',
+                          '--from-rotate': '0deg'
+                        } as React.CSSProperties}
+                      >
                         <NeumorphicButton>
                           See Our Approach
                         </NeumorphicButton>
                       </div>
-                    </div>
+                    </Parallax>
                   </div>
-                </Parallax>
+                </div>
               </div>
             </div>
           </section>
@@ -348,6 +613,11 @@ export default function HomePage() {
             </div>
           </section>
         </div>
+        <Footer />
+        <Footer />
+        
+        {/* Debug Tool - only shows in development or when debug=scroll is in URL */}
+        <ScrollDebugTool />
       </main>
     </ParallaxProvider>
   )

@@ -172,6 +172,7 @@ export default function ContactPage() {
             </div>
           </section>
         </div>
+        <Footer />
       </main>
     )
   }
@@ -417,6 +418,7 @@ export default function ContactPage() {
             </div>
           </section>
         </div>
+        <Footer />
       </main>
     </ParallaxProvider>
   )

@@ -71,6 +71,18 @@
   }
 }
 
+/* Hero card entry animation */
+@keyframes heroCardEntry {
+  0% {
+    opacity: 0;
+    transform: translateX(var(--from-x, 0)) translateY(var(--from-y, 0)) rotate(var(--from-rotate, 0deg)) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+  }
+}
+
 /* Typography Treatments */
 .neumorphic-text-3d {
   color: #2a2a2a;
@@ -169,15 +181,53 @@
   z-index: 10;
 }
 
+/* Split hero cards for multi-card animation */
+.hero-neumorphic-card-split {
+  position: relative;
+  z-index: 5;
+  background: #f0ebe3;
+  border-radius: 25px;
+  box-shadow:
+    6px 6px 12px rgba(0, 0, 0, 0.3),
+    -6px -6px 12px rgba(255, 255, 255, 0.3),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.5);
+  padding: 1.25rem 2rem;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  overflow: hidden;
+}
+
+.hero-neumorphic-card-split:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    8px 8px 16px rgba(0, 0, 0, 0.35),
+    -8px -8px 16px rgba(255, 255, 255, 0.35),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.4),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero-neumorphic-card-split * {
+  position: relative;
+  z-index: 10;
+}
+
 @media (min-width: 1024px) {
   .hero-neumorphic-card {
     padding: 2rem 2.5rem;
+  }
+  .hero-neumorphic-card-split {
+    padding: 1.5rem 2.5rem;
   }
 }
 
 @media (max-width: 768px) {
   .hero-neumorphic-card {
     padding: 1.5rem;
+  }
+  .hero-neumorphic-card-split {
+    padding: 1rem 1.5rem;
+    border-radius: 20px;
   }
 }
 
