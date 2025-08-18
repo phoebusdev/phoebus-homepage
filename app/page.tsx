@@ -2,7 +2,6 @@
 
 import { NeumorphicButton } from '@/components/NeumorphicButton/NeumorphicButton'
 import { NeumorphicCard } from '@/components/NeumorphicCard/NeumorphicCard'
-import { ServiceCard } from '@/components/ServiceCard/ServiceCard'
 import { Navigation } from '@/components/Navigation/Navigation'
 import { Footer } from '@/components/Footer/Footer'
 import { Icon } from '@/components/Icon/Icon'
@@ -25,41 +24,17 @@ const services = [
   {
     title: "Full-Stack Web Applications",
     icon: "language",
-    description: "Complete web applications that scale. Built lean but architected for growth. From simple sites to complex multi-tenant platforms.",
-    features: [
-      "Serverless architecture",
-      "Real-time dashboards", 
-      "PWAs",
-      "Global CDN",
-      "Multi-tenant SaaS",
-      "API-first development"
-    ]
+    description: "Complete web applications that scale. Built lean but architected for growth. From simple sites to complex multi-tenant platforms."
   },
   {
     title: "Mobile Applications", 
     icon: "phone_iphone",
-    description: "Native and cross-platform mobile apps that actually work. Built for performance and easy updates without app store hassles.",
-    features: [
-      "Native iOS/Android",
-      "Cross-platform solutions",
-      "Offline-first",
-      "OTA updates", 
-      "Push notifications",
-      "App store optimization"
-    ]
+    description: "Native and cross-platform mobile apps that actually work. Built for performance and easy updates without app store hassles."
   },
   {
     title: "E-commerce & Business Systems",
     icon: "shopping_cart", 
-    description: "Complete e-commerce platforms and business systems. Payment processing, inventory management, customer portals - everything you need to run and scale.",
-    features: [
-      "Payment processing",
-      "Inventory management",
-      "Customer portals",
-      "Multi-vendor marketplace",
-      "Automated notifications", 
-      "Analytics dashboards"
-    ]
+    description: "Complete e-commerce platforms and business systems. Payment processing, inventory management, customer portals - everything you need to run and scale."
   }
 ]
 
@@ -69,28 +44,24 @@ const processSteps = [
     icon: "search",
     number: "1",
     title: "Discovery & Reality Check",
-    shortText: "Understand your needs",
     fullText: "We figure out what you actually need. If we can talk you out of features you don't need, we will."
   },
   {
     icon: "visibility",
     number: "2", 
     title: "Free Prototype",
-    shortText: "See it working",
     fullText: "We build a working prototype at no cost. You see exactly how your product will work before paying a dollar."
   },
   {
     icon: "build",
     number: "3",
     title: "Build Phase", 
-    shortText: "Fixed price delivery",
     fullText: "Fixed scope, fixed timeline, fixed price. You get daily updates and can see your product being built in real-time."
   },
   {
     icon: "rocket_launch",
     number: "4",
     title: "Deploy & Transfer",
-    shortText: "Full ownership", 
     fullText: "We deploy your product and transfer 100% ownership to you. All code, all accounts, all passwords."
   }
 ]
@@ -151,39 +122,6 @@ function useStackedDeckAnimation() {
   return { containerRef, progress }
 }
 
-// Custom hook for hero card scatter animation
-function useHeroScatterAnimation() {
-  const heroRef = useRef<HTMLDivElement>(null)
-  const [scatterProgress, setScatterProgress] = useState(0)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!heroRef.current) return
-
-      const rect = heroRef.current.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      
-      // Start scattering when hero section approaches the top of viewport
-      const triggerPoint = viewportHeight * 0.8 // Start when 80% up from bottom
-      const animationRange = viewportHeight * 0.6 // Complete over 60% of viewport height
-      
-      const scrollFromTrigger = triggerPoint - rect.bottom
-      const rawProgress = Math.max(0, Math.min(1, scrollFromTrigger / animationRange))
-      
-      // Ease out cubic for smooth deceleration
-      const easedProgress = 1 - Math.pow(1 - rawProgress, 3)
-      
-      setScatterProgress(easedProgress)
-    }
-
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    handleScroll()
-    
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  return { heroRef, scatterProgress }
-}
 
 export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false)
@@ -542,7 +480,13 @@ export default function HomePage() {
                           zIndex: zIndex,
                         }}
                       >
-                        <ServiceStackCard service={service} index={idx} />
+                        <NeumorphicCard className={`w-80 h-48 ${['bg-gradient-to-br from-[#e8d5f2] to-[#d0e8e3]', 'bg-gradient-to-br from-[#d0e8e3] to-[#fce4d6]', 'bg-gradient-to-br from-[#fce4d6] to-[#d5e3f0]'][idx % 3]}`}>
+                          <div className="text-center p-6">
+                            <Icon name={service.icon} className="text-4xl text-text-primary mb-3" />
+                            <h3 className="text-xl font-display neumorphic-text-3d mb-3">{service.title}</h3>
+                            <p className="text-sm text-text-secondary line-clamp-3">{service.description}</p>
+                          </div>
+                        </NeumorphicCard>
                       </div>
                     )
                   })}
@@ -574,7 +518,19 @@ export default function HomePage() {
                         key={idx}
                         translateX={idx % 2 === 0 ? [-15, 0] : [15, 0]}
                       >
-                        <ProcessCard step={step} index={idx} />
+                        <div className="card-solution4 expanded">
+                          <div className="icon-neumorphic">
+                            <Icon name={step.icon} />
+                          </div>
+                          <div className="content-solution4">
+                            <h3 className="text-lg font-display neumorphic-text-3d mb-2">
+                              {step.title}
+                            </h3>
+                            <p className="text-sm text-text-secondary">
+                              {step.fullText}
+                            </p>
+                          </div>
+                        </div>
                       </Parallax>
                     ))}
                   </div>
@@ -614,7 +570,6 @@ export default function HomePage() {
           </section>
         </div>
         <Footer />
-        <Footer />
         
         {/* Debug Tool - only shows in development or when debug=scroll is in URL */}
         <ScrollDebugTool />
@@ -623,53 +578,6 @@ export default function HomePage() {
   )
 }
 
-// Service Stack Card Component
-function ServiceStackCard({ service, index }: { service: any, index: number }) {
-  const gradients = [
-    "bg-gradient-to-br from-[#e8d5f2] to-[#d0e8e3]",
-    "bg-gradient-to-br from-[#d0e8e3] to-[#fce4d6]", 
-    "bg-gradient-to-br from-[#fce4d6] to-[#d5e3f0]"
-  ]
-  
-  return (
-    <NeumorphicCard className={`w-80 h-48 ${gradients[index % gradients.length]}`}>
-      <div className="text-center p-6">
-        <Icon name={service.icon} className="text-4xl text-text-primary mb-3" />
-        <h3 className="text-xl font-display neumorphic-text-3d mb-3">{service.title}</h3>
-        <p className="text-sm text-text-secondary line-clamp-3">{service.description}</p>
-      </div>
-    </NeumorphicCard>
-  )
-}
-
-// Process Card Component  
-function ProcessCard({ step, index }: { step: any, index: number }) {
-  const [isExpanded, setIsExpanded] = useState(false)
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsExpanded(true)
-    }, (index + 1) * 300)
-
-    return () => clearTimeout(timer)
-  }, [index])
-
-  return (
-    <div className={`card-solution4 ${isExpanded ? 'expanded' : ''}`}>
-      <div className="icon-neumorphic">
-        <Icon name={step.icon} />
-      </div>
-      <div className="content-solution4">
-        <h3 className="text-lg font-display neumorphic-text-3d mb-2">
-          {step.title}
-        </h3>
-        <p className="text-sm text-text-secondary">
-          {step.fullText}
-        </p>
-      </div>
-    </div>
-  )
-}
 
 // Why Different Card Component
 function WhyDifferentCard({ item, index }: { item: any, index: number }) {
