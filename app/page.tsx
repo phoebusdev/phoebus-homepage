@@ -6,16 +6,13 @@ import { Navigation } from '@/components/Navigation/Navigation'
 import { Footer } from '@/components/Footer/Footer'
 import { Icon } from '@/components/Icon/Icon'
 import { ScrollDebugTool } from '@/components/ScrollDebugTool/ScrollDebugTool'
+import { ScrollDebugProvider } from '@/components/ScrollDebugContext/ScrollDebugContext'
+import { DebugParallax, StaticParallax } from '@/components/DebugParallax/DebugParallax'
 import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 
 const ParallaxProvider = dynamic(
   () => import('react-scroll-parallax').then(mod => mod.ParallaxProvider),
-  { ssr: false }
-)
-
-const Parallax = dynamic(
-  () => import('react-scroll-parallax').then(mod => mod.Parallax),
   { ssr: false }
 )
 
@@ -184,19 +181,20 @@ export default function HomePage() {
   }
 
   return (
-    <ParallaxProvider 
-      scrollAxis="vertical"
-      isDisabled={isMobile}
-    >
-      <main className="min-h-screen relative">
-        <Navigation />
+    <ScrollDebugProvider>
+      <ParallaxProvider 
+        scrollAxis="vertical"
+        isDisabled={isMobile}
+      >
+        <main className="min-h-screen relative">
+          <Navigation />
 
-        <Parallax 
-          translateY={[-20, 20]}
-          className="absolute inset-0 z-0"
-        >
-          <div className="w-full h-[120vh] bg-gradient-to-br from-[rgba(232,213,242,0.03)] via-[rgba(208,232,227,0.03)] to-[rgba(252,228,214,0.02)]" />
-        </Parallax>
+          <StaticParallax 
+            translateY={[-20, 20]}
+            className="absolute inset-0 z-0"
+          >
+            <div className="w-full h-[120vh] bg-gradient-to-br from-[rgba(232,213,242,0.03)] via-[rgba(208,232,227,0.03)] to-[rgba(252,228,214,0.02)]" />
+          </StaticParallax>
 
         <div className="relative z-10">
           {/* Hero Section - Load-Based Card Collage Animation */}
@@ -210,7 +208,8 @@ export default function HomePage() {
                     <div className="grid grid-cols-12 gap-4">
                       {/* Digital Products - auto-sized to content */}
                       <div className="col-span-12 md:col-span-7">
-                        <Parallax 
+                        <DebugParallax 
+                          debugId="digital-products"
                           translateX={[0, -80]}
                           translateY={[0, -30]}
                           rotate={[0, -10]}
@@ -232,11 +231,12 @@ export default function HomePage() {
                               </h1>
                             </div>
                           </div>
-                        </Parallax>
+                        </DebugParallax>
                       </div>
                       {/* No hidden fees - fills remainder */}
                       <div className="col-span-12 md:col-span-5">
-                        <Parallax 
+                        <DebugParallax 
+                          debugId="no-hidden-fees"
                           translateX={[0, 60]}
                           translateY={[0, -30]}
                           rotate={[0, 8]}
@@ -257,7 +257,7 @@ export default function HomePage() {
                               <p className="text-base text-text-secondary font-medium">No hidden fees</p>
                             </div>
                           </div>
-                        </Parallax>
+                        </DebugParallax>
                       </div>
                     </div>
 
@@ -265,7 +265,8 @@ export default function HomePage() {
                     <div className="grid grid-cols-12 gap-4">
                       {/* Built Right - auto-sized to content */}
                       <div className="col-span-12 md:col-span-6">
-                        <Parallax 
+                        <DebugParallax 
+                          debugId="built-right"
                           translateX={[0, -60]}
                           translateY={[0, -20]}
                           rotate={[0, -5]}
@@ -287,11 +288,12 @@ export default function HomePage() {
                               </h1>
                             </div>
                           </div>
-                        </Parallax>
+                        </DebugParallax>
                       </div>
                       {/* No drag-outs - fills remainder */}
                       <div className="col-span-12 md:col-span-6">
-                        <Parallax 
+                        <DebugParallax 
+                          debugId="no-drag-outs"
                           translateX={[0, 80]}
                           translateY={[0, -20]}
                           rotate={[0, 10]}
@@ -312,7 +314,7 @@ export default function HomePage() {
                               <p className="text-base text-text-secondary font-medium">No drag-outs</p>
                             </div>
                           </div>
-                        </Parallax>
+                        </DebugParallax>
                       </div>
                     </div>
 
@@ -320,7 +322,8 @@ export default function HomePage() {
                     <div className="grid grid-cols-12 gap-4">
                       {/* Delivered Fast - auto-sized to content */}
                       <div className="col-span-12 md:col-span-8">
-                        <Parallax 
+                        <DebugParallax 
+                          debugId="delivered-fast"
                           translateX={[0, -50]}
                           translateY={[0, -10]}
                           rotate={[0, -3]}
@@ -342,11 +345,12 @@ export default function HomePage() {
                               </h1>
                             </div>
                           </div>
-                        </Parallax>
+                        </DebugParallax>
                       </div>
                       {/* No vendor lock-in - fills remainder */}
                       <div className="col-span-12 md:col-span-4">
-                        <Parallax 
+                        <DebugParallax 
+                          debugId="no-lock-in"
                           translateX={[0, 70]}
                           translateY={[0, -10]}
                           rotate={[0, 5]}
@@ -367,14 +371,15 @@ export default function HomePage() {
                               <p className="text-base text-text-secondary font-medium">No vendor lock-in</p>
                             </div>
                           </div>
-                        </Parallax>
+                        </DebugParallax>
                       </div>
                     </div>
 
                     {/* Row 4: Description - Full width */}
                     <div className="grid grid-cols-12 gap-4">
                       <div className="col-span-12">
-                        <Parallax 
+                        <DebugParallax 
+                          debugId="description-card"
                           translateY={[0, 20]}
                           startScroll={100}
                           endScroll={800}
@@ -395,14 +400,15 @@ export default function HomePage() {
                               </p>
                             </div>
                           </div>
-                        </Parallax>
+                        </DebugParallax>
                       </div>
                     </div>
                   </div>
 
                   {/* CTA Buttons - Animate in from bottom */}
                   <div className="flex gap-4 flex-wrap justify-center">
-                    <Parallax 
+                    <DebugParallax 
+                      debugId="cta-button-1"
                       translateX={[0, -50]}
                       translateY={[0, 25]}
                       startScroll={100}
@@ -420,9 +426,10 @@ export default function HomePage() {
                           Get Your Free Prototype
                         </NeumorphicButton>
                       </div>
-                    </Parallax>
+                    </DebugParallax>
                     
-                    <Parallax 
+                    <DebugParallax 
+                      debugId="cta-button-2"
                       translateX={[0, 50]}
                       translateY={[0, 25]}
                       startScroll={100}
@@ -440,7 +447,7 @@ export default function HomePage() {
                           See Our Approach
                         </NeumorphicButton>
                       </div>
-                    </Parallax>
+                    </DebugParallax>
                   </div>
                 </div>
               </div>
@@ -500,7 +507,7 @@ export default function HomePage() {
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
                 <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center">
-                  <Parallax translateY={[-15, 15]}>
+                  <StaticParallax translateY={[-15, 15]}>
                     <div>
                       <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
                         Your Journey From <span className="plastic-tube-text">Concept To Launch</span>
@@ -510,11 +517,11 @@ export default function HomePage() {
                         with exceptional speed and quality, starting with a completely free prototype.
                       </p>
                     </div>
-                  </Parallax>
+                  </StaticParallax>
                   
                   <div className="space-y-6">
                     {processSteps.map((step, idx) => (
-                      <Parallax 
+                      <StaticParallax 
                         key={idx}
                         translateX={idx % 2 === 0 ? [-15, 0] : [15, 0]}
                       >
@@ -531,7 +538,7 @@ export default function HomePage() {
                             </p>
                           </div>
                         </div>
-                      </Parallax>
+                      </StaticParallax>
                     ))}
                   </div>
                 </div>
@@ -543,7 +550,7 @@ export default function HomePage() {
           <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
-                <Parallax translateY={[-20, 10]}>
+                <StaticParallax translateY={[-20, 10]}>
                   <div className="text-center mb-12 md:mb-16">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
                       Why We're <span className="plastic-tube-text">Different</span>
@@ -552,17 +559,17 @@ export default function HomePage() {
                       Most agencies want to keep you dependent. We want to set you free.
                     </p>
                   </div>
-                </Parallax>
+                </StaticParallax>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                   {whyDifferentItems.map((item, idx) => (
-                    <Parallax 
+                    <StaticParallax 
                       key={idx}
                       translateY={[20 + idx * 5, -10 - idx * 2]}
                       easing="easeOutQuad"
                     >
                       <WhyDifferentCard item={item} index={idx} />
-                    </Parallax>
+                    </StaticParallax>
                   ))}
                 </div>
               </div>
@@ -575,6 +582,7 @@ export default function HomePage() {
         <ScrollDebugTool />
       </main>
     </ParallaxProvider>
+  </ScrollDebugProvider>
   )
 }
 

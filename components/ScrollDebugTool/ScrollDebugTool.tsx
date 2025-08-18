@@ -1,98 +1,33 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import { useScrollDebug, calculateTransform, AnimationConfig } from '@/components/ScrollDebugContext/ScrollDebugContext'
 import styles from './ScrollDebugTool.module.css'
 
-interface AnimationConfig {
-  id: string
-  name: string
-  translateX: [number, number]
-  translateY: [number, number]
-  rotate: [number, number]
-  startScroll: number
-  endScroll: number
-}
-
-const DEFAULT_CONFIGS: AnimationConfig[] = [
-  {
-    id: 'digital-products',
-    name: 'Digital Products',
-    translateX: [0, -80],
-    translateY: [0, -30],
-    rotate: [0, -10],
-    startScroll: 200,
-    endScroll: 800
-  },
-  {
-    id: 'built-right',
-    name: 'Built Right',
-    translateX: [0, -60],
-    translateY: [0, -20],
-    rotate: [0, -5],
-    startScroll: 200,
-    endScroll: 800
-  },
-  {
-    id: 'delivered-fast',
-    name: 'Delivered Fast',
-    translateX: [0, -50],
-    translateY: [0, -10],
-    rotate: [0, -3],
-    startScroll: 200,
-    endScroll: 800
-  },
-  {
-    id: 'no-hidden-fees',
-    name: 'No Hidden Fees',
-    translateX: [0, 60],
-    translateY: [0, -30],
-    rotate: [0, 8],
-    startScroll: 200,
-    endScroll: 800
-  },
-  {
-    id: 'no-drag-outs',
-    name: 'No Drag-outs',
-    translateX: [0, 80],
-    translateY: [0, -20],
-    rotate: [0, 10],
-    startScroll: 200,
-    endScroll: 800
-  },
-  {
-    id: 'no-lock-in',
-    name: 'No Lock-in',
-    translateX: [0, 70],
-    translateY: [0, -10],
-    rotate: [0, 5],
-    startScroll: 200,
-    endScroll: 800
-  }
-]
-
 export function ScrollDebugTool() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [configs, setConfigs] = useState<AnimationConfig[]>(DEFAULT_CONFIGS)
-  const [selectedConfig, setSelectedConfig] = useState<string>('digital-products')
+  const {
+    configs,
+    updateConfig,
+    isDebugMode,
+    selectedElementId,
+    setSelectedElementId,
+    currentScrollY,
+    highlightElement,
+    unhighlightElement,
+    highlightedElementId
+  } = useScrollDebug()
+
   const [isMinimized, setIsMinimized] = useState(false)
+  const [showLivePreview, setShowLivePreview] = useState(true)
 
-  // Show only in development or when debug flag is set
-  useEffect(() => {
-    const showDebug = process.env.NODE_ENV === 'development' || 
-                     localStorage.getItem('scroll-debug') === 'true' ||
-                     window.location.search.includes('debug=scroll')
-    setIsVisible(showDebug)
-  }, [])
+  const selectedConfig = selectedElementId ? 
+    configs.find(c => c.id === selectedElementId) : 
+    configs[0]
 
-  const updateConfig = (field: keyof AnimationConfig, value: any) => {
-    setConfigs(prev => prev.map(config => 
-      config.id === selectedConfig 
-        ? { ...config, [field]: value }
-        : config
-    ))
+  const handleElementSelect = (elementId: string) => {
+    setSelectedElementId(elementId)
+    highlightElement(elementId)
   }
-
-  const getSelectedConfig = () => configs.find(c => c.id === selectedConfig) || configs[0]
 
   const copyToClipboard = () => {
     const configText = configs.map(config => `
@@ -108,19 +43,34 @@ endScroll={${config.endScroll}}
     alert('Animation configs copied to clipboard!')
   }
 
-  const resetToDefaults = () => {
-    setConfigs(DEFAULT_CONFIGS)
+  const scrollToElement = (elementId: string) => {
+    const element = document.querySelector(`[data-debug-id="${elementId}"]`)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      highlightElement(elementId)
+    }
   }
 
-  if (!isVisible) return null
+  if (!isDebugMode) return null
 
-  const selected = getSelectedConfig()
+  const selected = selectedConfig || configs[0]
+  const currentTransform = calculateTransform(selected, currentScrollY)
 
   return (
     <div className={`${styles.debugTool} ${isMinimized ? styles.minimized : ''}`}>
       <div className={styles.header}>
-        <h3>Scroll Animation Debug</h3>
+        <h3>Live Scroll Debug</h3>
+        <div className={styles.scrollInfo}>
+          Scroll: {currentScrollY.toFixed(0)}px
+        </div>
         <div className={styles.headerControls}>
+          <button 
+            className={styles.toggleBtn}
+            onClick={() => setShowLivePreview(!showLivePreview)}
+            title="Toggle Live Preview"
+          >
+            {showLivePreview ? '👁️' : '👁️‍🗨️'}
+          </button>
           <button 
             className={styles.minimizeBtn}
             onClick={() => setIsMinimized(!isMinimized)}
@@ -129,7 +79,7 @@ endScroll={${config.endScroll}}
           </button>
           <button 
             className={styles.closeBtn}
-            onClick={() => setIsVisible(false)}
+            onClick={() => unhighlightElement()}
           >
             ×
           </button>
@@ -141,109 +91,204 @@ endScroll={${config.endScroll}}
           <div className={styles.elementSelector}>
             <label>Element:</label>
             <select 
-              value={selectedConfig} 
-              onChange={(e) => setSelectedConfig(e.target.value)}
+              value={selectedElementId || ''} 
+              onChange={(e) => handleElementSelect(e.target.value)}
             >
+              <option value="">Select element...</option>
               {configs.map(config => (
                 <option key={config.id} value={config.id}>
                   {config.name}
                 </option>
               ))}
             </select>
+            {selectedElementId && (
+              <button 
+                className={styles.locateBtn}
+                onClick={() => scrollToElement(selectedElementId)}
+                title="Scroll to element"
+              >
+                📍
+              </button>
+            )}
           </div>
 
-          <div className={styles.controls}>
-            <div className={styles.controlGroup}>
-              <label>translateX:</label>
-              <div className={styles.rangeInputs}>
+          {showLivePreview && selected && (
+            <div className={styles.livePreview}>
+              <strong>Live Values (Scroll: {currentScrollY}px)</strong>
+              <div className={styles.progressBar}>
+                <div 
+                  className={styles.progressFill}
+                  style={{ 
+                    width: `${Math.max(0, Math.min(100, currentTransform.progress * 100))}%` 
+                  }}
+                />
+                <span className={styles.progressText}>
+                  {(currentTransform.progress * 100).toFixed(1)}%
+                </span>
+              </div>
+              <div className={styles.liveValues}>
+                <span>X: {currentTransform.translateX.toFixed(1)}px</span>
+                <span>Y: {currentTransform.translateY.toFixed(1)}px</span>
+                <span>R: {currentTransform.rotate.toFixed(1)}°</span>
+              </div>
+            </div>
+          )}
+
+          {selected && (
+            <div className={styles.controls}>
+              <div className={styles.controlGroup}>
+                <label>translateX:</label>
+                <div className={styles.rangeInputs}>
+                  <input
+                    type="range"
+                    min="-200"
+                    max="200"
+                    value={selected.translateX[0]}
+                    onChange={(e) => updateConfig(selected.id, 'translateX', [+e.target.value, selected.translateX[1]])}
+                    className={styles.slider}
+                  />
+                  <input
+                    type="number"
+                    value={selected.translateX[0]}
+                    onChange={(e) => updateConfig(selected.id, 'translateX', [+e.target.value, selected.translateX[1]])}
+                    placeholder="Start"
+                    className={styles.numberInput}
+                  />
+                  <span>to</span>
+                  <input
+                    type="range"
+                    min="-200"
+                    max="200"
+                    value={selected.translateX[1]}
+                    onChange={(e) => updateConfig(selected.id, 'translateX', [selected.translateX[0], +e.target.value])}
+                    className={styles.slider}
+                  />
+                  <input
+                    type="number"
+                    value={selected.translateX[1]}
+                    onChange={(e) => updateConfig(selected.id, 'translateX', [selected.translateX[0], +e.target.value])}
+                    placeholder="End"
+                    className={styles.numberInput}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.controlGroup}>
+                <label>translateY:</label>
+                <div className={styles.rangeInputs}>
+                  <input
+                    type="range"
+                    min="-200"
+                    max="200"
+                    value={selected.translateY[0]}
+                    onChange={(e) => updateConfig(selected.id, 'translateY', [+e.target.value, selected.translateY[1]])}
+                    className={styles.slider}
+                  />
+                  <input
+                    type="number"
+                    value={selected.translateY[0]}
+                    onChange={(e) => updateConfig(selected.id, 'translateY', [+e.target.value, selected.translateY[1]])}
+                    placeholder="Start"
+                    className={styles.numberInput}
+                  />
+                  <span>to</span>
+                  <input
+                    type="range"
+                    min="-200"
+                    max="200"
+                    value={selected.translateY[1]}
+                    onChange={(e) => updateConfig(selected.id, 'translateY', [selected.translateY[0], +e.target.value])}
+                    className={styles.slider}
+                  />
+                  <input
+                    type="number"
+                    value={selected.translateY[1]}
+                    onChange={(e) => updateConfig(selected.id, 'translateY', [selected.translateY[0], +e.target.value])}
+                    placeholder="End"
+                    className={styles.numberInput}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.controlGroup}>
+                <label>rotate:</label>
+                <div className={styles.rangeInputs}>
+                  <input
+                    type="range"
+                    min="-45"
+                    max="45"
+                    value={selected.rotate[0]}
+                    onChange={(e) => updateConfig(selected.id, 'rotate', [+e.target.value, selected.rotate[1]])}
+                    className={styles.slider}
+                  />
+                  <input
+                    type="number"
+                    value={selected.rotate[0]}
+                    onChange={(e) => updateConfig(selected.id, 'rotate', [+e.target.value, selected.rotate[1]])}
+                    placeholder="Start"
+                    className={styles.numberInput}
+                  />
+                  <span>to</span>
+                  <input
+                    type="range"
+                    min="-45"
+                    max="45"
+                    value={selected.rotate[1]}
+                    onChange={(e) => updateConfig(selected.id, 'rotate', [selected.rotate[0], +e.target.value])}
+                    className={styles.slider}
+                  />
+                  <input
+                    type="number"
+                    value={selected.rotate[1]}
+                    onChange={(e) => updateConfig(selected.id, 'rotate', [selected.rotate[0], +e.target.value])}
+                    placeholder="End"
+                    className={styles.numberInput}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.controlGroup}>
+                <label>startScroll:</label>
                 <input
-                  type="number"
-                  value={selected.translateX[0]}
-                  onChange={(e) => updateConfig('translateX', [+e.target.value, selected.translateX[1]])}
-                  placeholder="Start"
+                  type="range"
+                  min="0"
+                  max="2000"
+                  value={selected.startScroll}
+                  onChange={(e) => updateConfig(selected.id, 'startScroll', +e.target.value)}
+                  className={styles.slider}
                 />
                 <input
                   type="number"
-                  value={selected.translateX[1]}
-                  onChange={(e) => updateConfig('translateX', [selected.translateX[0], +e.target.value])}
-                  placeholder="End"
+                  value={selected.startScroll}
+                  onChange={(e) => updateConfig(selected.id, 'startScroll', +e.target.value)}
+                  className={styles.numberInput}
+                />
+              </div>
+
+              <div className={styles.controlGroup}>
+                <label>endScroll:</label>
+                <input
+                  type="range"
+                  min="0"
+                  max="2000"
+                  value={selected.endScroll}
+                  onChange={(e) => updateConfig(selected.id, 'endScroll', +e.target.value)}
+                  className={styles.slider}
+                />
+                <input
+                  type="number"
+                  value={selected.endScroll}
+                  onChange={(e) => updateConfig(selected.id, 'endScroll', +e.target.value)}
+                  className={styles.numberInput}
                 />
               </div>
             </div>
-
-            <div className={styles.controlGroup}>
-              <label>translateY:</label>
-              <div className={styles.rangeInputs}>
-                <input
-                  type="number"
-                  value={selected.translateY[0]}
-                  onChange={(e) => updateConfig('translateY', [+e.target.value, selected.translateY[1]])}
-                  placeholder="Start"
-                />
-                <input
-                  type="number"
-                  value={selected.translateY[1]}
-                  onChange={(e) => updateConfig('translateY', [selected.translateY[0], +e.target.value])}
-                  placeholder="End"
-                />
-              </div>
-            </div>
-
-            <div className={styles.controlGroup}>
-              <label>rotate:</label>
-              <div className={styles.rangeInputs}>
-                <input
-                  type="number"
-                  value={selected.rotate[0]}
-                  onChange={(e) => updateConfig('rotate', [+e.target.value, selected.rotate[1]])}
-                  placeholder="Start"
-                />
-                <input
-                  type="number"
-                  value={selected.rotate[1]}
-                  onChange={(e) => updateConfig('rotate', [selected.rotate[0], +e.target.value])}
-                  placeholder="End"
-                />
-              </div>
-            </div>
-
-            <div className={styles.controlGroup}>
-              <label>startScroll:</label>
-              <input
-                type="number"
-                value={selected.startScroll}
-                onChange={(e) => updateConfig('startScroll', +e.target.value)}
-              />
-            </div>
-
-            <div className={styles.controlGroup}>
-              <label>endScroll:</label>
-              <input
-                type="number"
-                value={selected.endScroll}
-                onChange={(e) => updateConfig('endScroll', +e.target.value)}
-              />
-            </div>
-          </div>
+          )}
 
           <div className={styles.actions}>
             <button onClick={copyToClipboard} className={styles.copyBtn}>
               📋 Copy All Configs
             </button>
-            <button onClick={resetToDefaults} className={styles.resetBtn}>
-              🔄 Reset to Defaults
-            </button>
-          </div>
-
-          <div className={styles.preview}>
-            <strong>Current Values:</strong>
-            <pre className={styles.previewCode}>
-{`translateX={[${selected.translateX[0]}, ${selected.translateX[1]}]}
-translateY={[${selected.translateY[0]}, ${selected.translateY[1]}]}
-rotate={[${selected.rotate[0]}, ${selected.rotate[1]}]}
-startScroll={${selected.startScroll}}
-endScroll={${selected.endScroll}}`}
-            </pre>
           </div>
         </div>
       )}
