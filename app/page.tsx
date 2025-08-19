@@ -177,13 +177,9 @@ export default function HomePage() {
                     <div className="grid grid-cols-12 gap-4">
                       {/* Digital Products - auto-sized to content */}
                       <div className="col-span-12 md:col-span-7">
-                        <DebugParallax 
-                          debugId="digital-products"
-                          translateX={[0, -80]}
-                          translateY={[0, -30]}
-                          rotate={[0, -10]}
-                          startScroll={100}
-                          endScroll={800}
+                        <DualParallax
+                          entryDebugId="digital-products-entry"
+                          exitDebugId="digital-products-exit"
                         >
                           <div 
                             className="hero-card-animate"
@@ -200,17 +196,13 @@ export default function HomePage() {
                               </h1>
                             </div>
                           </div>
-                        </DebugParallax>
+                        </DualParallax>
                       </div>
                       {/* No hidden fees - fills remainder */}
                       <div className="col-span-12 md:col-span-5">
-                        <DebugParallax 
-                          debugId="no-hidden-fees"
-                          translateX={[0, 60]}
-                          translateY={[0, -30]}
-                          rotate={[0, 8]}
-                          startScroll={100}
-                          endScroll={800}
+                        <DualParallax
+                          entryDebugId="no-hidden-fees-entry"
+                          exitDebugId="no-hidden-fees-exit"
                         >
                           <div 
                             className="hero-card-animate"
@@ -226,7 +218,7 @@ export default function HomePage() {
                               <p className="text-base text-text-secondary font-medium">No hidden fees</p>
                             </div>
                           </div>
-                        </DebugParallax>
+                        </DualParallax>
                       </div>
                     </div>
 
@@ -234,13 +226,9 @@ export default function HomePage() {
                     <div className="grid grid-cols-12 gap-4">
                       {/* Built Right - auto-sized to content */}
                       <div className="col-span-12 md:col-span-6">
-                        <DebugParallax 
-                          debugId="built-right"
-                          translateX={[0, -60]}
-                          translateY={[0, -20]}
-                          rotate={[0, -5]}
-                          startScroll={100}
-                          endScroll={800}
+                        <DualParallax
+                          entryDebugId="built-right-entry"
+                          exitDebugId="built-right-exit"
                         >
                           <div 
                             className="hero-card-animate"
@@ -257,17 +245,13 @@ export default function HomePage() {
                               </h1>
                             </div>
                           </div>
-                        </DebugParallax>
+                        </DualParallax>
                       </div>
                       {/* No drag-outs - fills remainder */}
                       <div className="col-span-12 md:col-span-6">
-                        <DebugParallax 
-                          debugId="no-drag-outs"
-                          translateX={[0, 80]}
-                          translateY={[0, -20]}
-                          rotate={[0, 10]}
-                          startScroll={100}
-                          endScroll={800}
+                        <DualParallax
+                          entryDebugId="no-drag-outs-entry"
+                          exitDebugId="no-drag-outs-exit"
                         >
                           <div 
                             className="hero-card-animate"
@@ -283,7 +267,7 @@ export default function HomePage() {
                               <p className="text-base text-text-secondary font-medium">No drag-outs</p>
                             </div>
                           </div>
-                        </DebugParallax>
+                        </DualParallax>
                       </div>
                     </div>
 
@@ -291,13 +275,9 @@ export default function HomePage() {
                     <div className="grid grid-cols-12 gap-4">
                       {/* Delivered Fast - auto-sized to content */}
                       <div className="col-span-12 md:col-span-8">
-                        <DebugParallax 
-                          debugId="delivered-fast"
-                          translateX={[0, -50]}
-                          translateY={[0, -10]}
-                          rotate={[0, -3]}
-                          startScroll={100}
-                          endScroll={800}
+                        <DualParallax
+                          entryDebugId="delivered-fast-entry"
+                          exitDebugId="delivered-fast-exit"
                         >
                           <div 
                             className="hero-card-animate"
@@ -314,17 +294,13 @@ export default function HomePage() {
                               </h1>
                             </div>
                           </div>
-                        </DebugParallax>
+                        </DualParallax>
                       </div>
                       {/* No vendor lock-in - fills remainder */}
                       <div className="col-span-12 md:col-span-4">
-                        <DebugParallax 
-                          debugId="no-lock-in"
-                          translateX={[0, 70]}
-                          translateY={[0, -10]}
-                          rotate={[0, 5]}
-                          startScroll={100}
-                          endScroll={800}
+                        <DualParallax
+                          entryDebugId="no-lock-in-entry"
+                          exitDebugId="no-lock-in-exit"
                         >
                           <div 
                             className="hero-card-animate"
@@ -340,18 +316,16 @@ export default function HomePage() {
                               <p className="text-base text-text-secondary font-medium">No vendor lock-in</p>
                             </div>
                           </div>
-                        </DebugParallax>
+                        </DualParallax>
                       </div>
                     </div>
 
                     {/* Row 4: Description - Full width */}
                     <div className="grid grid-cols-12 gap-4">
                       <div className="col-span-12">
-                        <DebugParallax 
-                          debugId="description-card"
-                          translateY={[0, 20]}
-                          startScroll={100}
-                          endScroll={800}
+                        <DualParallax
+                          entryDebugId="description-card-entry"
+                          exitDebugId="description-card-exit"
                         >
                           <div 
                             className="hero-card-animate"
@@ -369,19 +343,16 @@ export default function HomePage() {
                               </p>
                             </div>
                           </div>
-                        </DebugParallax>
+                        </DualParallax>
                       </div>
                     </div>
                   </div>
 
                   {/* CTA Buttons - Animate in from bottom */}
                   <div className="flex gap-4 flex-wrap justify-center">
-                    <DebugParallax 
-                      debugId="cta-button-1"
-                      translateX={[0, -50]}
-                      translateY={[0, 25]}
-                      startScroll={100}
-                      endScroll={800}
+                    <DualParallax
+                      entryDebugId="cta-button-1-entry"
+                      exitDebugId="cta-button-1-exit"
                     >
                       <div 
                         style={{
@@ -395,14 +366,11 @@ export default function HomePage() {
                           Get Your Free Prototype
                         </NeumorphicButton>
                       </div>
-                    </DebugParallax>
+                    </DualParallax>
                     
-                    <DebugParallax 
-                      debugId="cta-button-2"
-                      translateX={[0, 50]}
-                      translateY={[0, 25]}
-                      startScroll={100}
-                      endScroll={800}
+                    <DualParallax
+                      entryDebugId="cta-button-2-entry"
+                      exitDebugId="cta-button-2-exit"
                     >
                       <div 
                         style={{
@@ -416,7 +384,7 @@ export default function HomePage() {
                           See Our Approach
                         </NeumorphicButton>
                       </div>
-                    </DebugParallax>
+                    </DualParallax>
                   </div>
                 </div>
               </div>
@@ -473,11 +441,9 @@ export default function HomePage() {
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
                 <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center">
-                  <DebugParallax 
-                    debugId="process-title"
-                    translateY={[-15, 15]}
-                    startScroll={100}
-                    endScroll={800}
+                  <DualParallax
+                    entryDebugId="process-title-entry"
+                    exitDebugId="process-title-exit"
                   >
                     <div>
                       <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
@@ -488,16 +454,14 @@ export default function HomePage() {
                         with exceptional speed and quality, starting with a completely free prototype.
                       </p>
                     </div>
-                  </DebugParallax>
+                  </DualParallax>
                   
                   <div className="space-y-6">
                     {processSteps.map((step, idx) => (
-                      <DebugParallax 
+                      <DualParallax
                         key={idx}
-                        debugId={`process-step-${idx}`}
-                        translateX={idx % 2 === 0 ? [-15, 0] : [15, 0]}
-                        startScroll={100}
-                        endScroll={800}
+                        entryDebugId={`process-step-${idx}-entry`}
+                        exitDebugId={`process-step-${idx}-exit`}
                       >
                         <div className="card-solution4 expanded">
                           <div className="icon-neumorphic">
@@ -512,7 +476,7 @@ export default function HomePage() {
                             </p>
                           </div>
                         </div>
-                      </DebugParallax>
+                      </DualParallax>
                     ))}
                   </div>
                 </div>
@@ -524,11 +488,9 @@ export default function HomePage() {
           <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="why-different">
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
-                <DebugParallax 
-                  debugId="why-different-title"
-                  translateY={[-20, 10]}
-                  startScroll={100}
-                  endScroll={800}
+                <DualParallax
+                  entryDebugId="why-different-title-entry"
+                  exitDebugId="why-different-title-exit"
                 >
                   <div className="text-center mb-12 md:mb-16">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
@@ -538,19 +500,17 @@ export default function HomePage() {
                       Most agencies want to keep you dependent. We want to set you free.
                     </p>
                   </div>
-                </DebugParallax>
+                </DualParallax>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                   {whyDifferentItems.map((item, idx) => (
-                    <DebugParallax 
+                    <DualParallax
                       key={idx}
-                      debugId={`why-different-${idx}`}
-                      translateY={[20 + idx * 5, -10 - idx * 2]}
-                      startScroll={100}
-                      endScroll={800}
+                      entryDebugId={`why-different-${idx}-entry`}
+                      exitDebugId={`why-different-${idx}-exit`}
                     >
                       <WhyDifferentCard item={item} index={idx} />
-                    </DebugParallax>
+                    </DualParallax>
                   ))}
                 </div>
               </div>
@@ -561,30 +521,22 @@ export default function HomePage() {
           <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="about">
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
-                <DebugParallax 
-                  debugId="about-title"
-                  translateX={[0, 0]}
-                  translateY={[0, 0]}
-                  rotate={[0, 0]}
-                  startScroll={4100}
-                  endScroll={4300}
+                <DualParallax
+                  entryDebugId="about-title-entry"
+                  exitDebugId="about-title-exit"
                 >
                   <div className="text-center mb-12 md:mb-16">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
                       Why Choose <span className="plastic-tube-text">Phoebus Digital?</span>
                     </h2>
                   </div>
-                </DebugParallax>
+                </DualParallax>
                 
                 {/* About Content Grid */}
                 <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
-                  <DebugParallax 
-                    debugId="about-content"
-                    translateX={[0, 0]}
-                    translateY={[0, 0]}
-                    rotate={[0, 0]}
-                    startScroll={4150}
-                    endScroll={4350}
+                  <DualParallax
+                    entryDebugId="about-content-entry"
+                    exitDebugId="about-content-exit"
                   >
                     <div className="space-y-6">
                       <p className="text-lg md:text-xl text-text-secondary">
@@ -599,15 +551,11 @@ export default function HomePage() {
                         </NeumorphicButton>
                       </div>
                     </div>
-                  </DebugParallax>
+                  </DualParallax>
                   
-                  <DebugParallax 
-                    debugId="about-features"
-                    translateX={[0, 0]}
-                    translateY={[0, 0]}
-                    rotate={[0, 0]}
-                    startScroll={4200}
-                    endScroll={4400}
+                  <DualParallax
+                    entryDebugId="about-features-entry"
+                    exitDebugId="about-features-exit"
                   >
                     <NeumorphicCard className="p-8">
                       <div className="space-y-4">
@@ -625,7 +573,7 @@ export default function HomePage() {
                         ))}
                       </div>
                     </NeumorphicCard>
-                  </DebugParallax>
+                  </DualParallax>
                 </div>
               </div>
             </div>
@@ -635,13 +583,9 @@ export default function HomePage() {
           <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="contact">
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
-                <DebugParallax 
-                  debugId="contact-title"
-                  translateX={[0, 0]}
-                  translateY={[0, 0]}
-                  rotate={[0, 0]}
-                  startScroll={4800}
-                  endScroll={5000}
+                <DualParallax
+                  entryDebugId="contact-title-entry"
+                  exitDebugId="contact-title-exit"
                 >
                   <div className="text-center mb-12 md:mb-16">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
@@ -651,17 +595,13 @@ export default function HomePage() {
                       Ready to transform your vision into reality? Start with a completely free prototype and see how our streamlined approach can bring your digital dreams to life.
                     </p>
                   </div>
-                </DebugParallax>
+                </DualParallax>
                 
                 {/* Contact CTA Cards */}
                 <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                  <DebugParallax 
-                    debugId="contact-cta-1"
-                    translateX={[0, 0]}
-                    translateY={[0, 0]}
-                    rotate={[0, 0]}
-                    startScroll={4850}
-                    endScroll={5050}
+                  <DualParallax
+                    entryDebugId="contact-cta-1-entry"
+                    exitDebugId="contact-cta-1-exit"
                   >
                     <NeumorphicCard className="text-center p-8 h-full">
                       <Icon name="mail" className="text-4xl text-salmon-pink mb-4" />
@@ -671,15 +611,11 @@ export default function HomePage() {
                         phoebusdigitalsolutions@gmail.com
                       </p>
                     </NeumorphicCard>
-                  </DebugParallax>
+                  </DualParallax>
                   
-                  <DebugParallax 
-                    debugId="contact-cta-2"
-                    translateX={[0, 0]}
-                    translateY={[0, 0]}
-                    rotate={[0, 0]}
-                    startScroll={4900}
-                    endScroll={5100}
+                  <DualParallax
+                    entryDebugId="contact-cta-2-entry"
+                    exitDebugId="contact-cta-2-exit"
                   >
                     <NeumorphicCard className="text-center p-8 h-full">
                       <Icon name="phone" className="text-4xl text-sage-green mb-4" />
@@ -689,24 +625,20 @@ export default function HomePage() {
                         +1 (416) 768-1201
                       </p>
                     </NeumorphicCard>
-                  </DebugParallax>
+                  </DualParallax>
                 </div>
                 
                 {/* Final CTA */}
-                <DebugParallax 
-                  debugId="contact-final-cta"
-                  translateX={[0, 0]}
-                  translateY={[0, 0]}
-                  rotate={[0, 0]}
-                  startScroll={4950}
-                  endScroll={5150}
+                <DualParallax
+                  entryDebugId="contact-final-cta-entry"
+                  exitDebugId="contact-final-cta-exit"
                 >
                   <div className="text-center mt-12">
                     <NeumorphicButton>
                       Get Your Free Prototype
                     </NeumorphicButton>
                   </div>
-                </DebugParallax>
+                </DualParallax>
               </div>
             </div>
           </section>

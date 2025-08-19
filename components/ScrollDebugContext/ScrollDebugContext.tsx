@@ -44,9 +44,10 @@ export interface ScrollDebugContextType {
 }
 
 const DEFAULT_CONFIGS: AnimationConfig[] = [
+  // Hero Cards - Dual Animation System (Entry + Exit)
   {
-    id: 'digital-products',
-    name: 'Digital Products',
+    id: 'digital-products-entry',
+    name: 'Digital Products Entry',
     translateX: [0, -185],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -54,8 +55,17 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 180
   },
   {
-    id: 'built-right',
-    name: 'Built Right',
+    id: 'digital-products-exit',
+    name: 'Digital Products Exit',
+    translateX: [0, -185],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 98,
+    endScroll: 180
+  },
+  {
+    id: 'built-right-entry',
+    name: 'Built Right Entry',
     translateX: [0, -175],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -63,8 +73,17 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 250
   },
   {
-    id: 'delivered-fast',
-    name: 'Delivered Fast',
+    id: 'built-right-exit',
+    name: 'Built Right Exit',
+    translateX: [0, -175],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 110,
+    endScroll: 250
+  },
+  {
+    id: 'delivered-fast-entry',
+    name: 'Delivered Fast Entry',
     translateX: [0, -165],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -72,8 +91,17 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 401
   },
   {
-    id: 'no-hidden-fees',
-    name: 'No Hidden Fees',
+    id: 'delivered-fast-exit',
+    name: 'Delivered Fast Exit',
+    translateX: [0, -165],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 130,
+    endScroll: 401
+  },
+  {
+    id: 'no-hidden-fees-entry',
+    name: 'No Hidden Fees Entry',
     translateX: [0, 185],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -81,8 +109,17 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 195
   },
   {
-    id: 'no-drag-outs',
-    name: 'No Drag-outs',
+    id: 'no-hidden-fees-exit',
+    name: 'No Hidden Fees Exit',
+    translateX: [0, 185],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 110,
+    endScroll: 195
+  },
+  {
+    id: 'no-drag-outs-entry',
+    name: 'No Drag-outs Entry',
     translateX: [0, 175],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -90,8 +127,17 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 250
   },
   {
-    id: 'no-lock-in',
-    name: 'No Lock-in',
+    id: 'no-drag-outs-exit',
+    name: 'No Drag-outs Exit',
+    translateX: [0, 175],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 90,
+    endScroll: 250
+  },
+  {
+    id: 'no-lock-in-entry',
+    name: 'No Lock-in Entry',
     translateX: [0, 200],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -99,8 +145,17 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 401
   },
   {
-    id: 'description-card',
-    name: 'Description Card',
+    id: 'no-lock-in-exit',
+    name: 'No Lock-in Exit',
+    translateX: [0, 200],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 100,
+    endScroll: 401
+  },
+  {
+    id: 'description-card-entry',
+    name: 'Description Card Entry',
     translateX: [0, 130],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -108,8 +163,17 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 458
   },
   {
-    id: 'cta-button-1',
-    name: 'CTA Button 1',
+    id: 'description-card-exit',
+    name: 'Description Card Exit',
+    translateX: [0, 130],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 130,
+    endScroll: 458
+  },
+  {
+    id: 'cta-button-1-entry',
+    name: 'CTA Button 1 Entry',
     translateX: [0, -509],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -117,8 +181,26 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 601
   },
   {
-    id: 'cta-button-2',
-    name: 'CTA Button 2',
+    id: 'cta-button-1-exit',
+    name: 'CTA Button 1 Exit',
+    translateX: [0, -509],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 150,
+    endScroll: 601
+  },
+  {
+    id: 'cta-button-2-entry',
+    name: 'CTA Button 2 Entry',
+    translateX: [0, 559],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 165,
+    endScroll: 595
+  },
+  {
+    id: 'cta-button-2-exit',
+    name: 'CTA Button 2 Exit',
     translateX: [0, 559],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -192,102 +274,192 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     startScroll: 970,
     endScroll: 1187
   },
-  // Process Section Cards
+  // Process Section - Dual Animation System (Entry + Exit)
   {
-    id: 'process-title',
-    name: 'Process Section Title',
+    id: 'process-title-entry',
+    name: 'Process Title Entry',
     translateX: [0, 0],
     translateY: [-15, 15],
     rotate: [0, 0],
-    startScroll: 100,
-    endScroll: 800
+    startScroll: 1600,
+    endScroll: 1800
   },
   {
-    id: 'process-step-0',
-    name: 'Process Step 1 (Discovery)',
+    id: 'process-title-exit',
+    name: 'Process Title Exit',
+    translateX: [0, 0],
+    translateY: [0, -30],
+    rotate: [0, 0],
+    startScroll: 2400,
+    endScroll: 2600
+  },
+  {
+    id: 'process-step-0-entry',
+    name: 'Process Step 1 Entry (Discovery)',
     translateX: [-15, 0],
     translateY: [0, 0],
     rotate: [0, 0],
-    startScroll: 100,
-    endScroll: 800
+    startScroll: 1650,
+    endScroll: 1850
   },
   {
-    id: 'process-step-1',
-    name: 'Process Step 2 (Prototype)',
+    id: 'process-step-0-exit',
+    name: 'Process Step 1 Exit (Discovery)',
+    translateX: [0, -200],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 2400,
+    endScroll: 2600
+  },
+  {
+    id: 'process-step-1-entry',
+    name: 'Process Step 2 Entry (Prototype)',
     translateX: [15, 0],
     translateY: [0, 0],
     rotate: [0, 0],
-    startScroll: 100,
-    endScroll: 800
+    startScroll: 1700,
+    endScroll: 1900
   },
   {
-    id: 'process-step-2',
-    name: 'Process Step 3 (Build)',
+    id: 'process-step-1-exit',
+    name: 'Process Step 2 Exit (Prototype)',
+    translateX: [0, 200],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 2400,
+    endScroll: 2600
+  },
+  {
+    id: 'process-step-2-entry',
+    name: 'Process Step 3 Entry (Build)',
     translateX: [-15, 0],
     translateY: [0, 0],
     rotate: [0, 0],
-    startScroll: 100,
-    endScroll: 800
+    startScroll: 1750,
+    endScroll: 1950
   },
   {
-    id: 'process-step-3',
-    name: 'Process Step 4 (Deploy)',
+    id: 'process-step-2-exit',
+    name: 'Process Step 3 Exit (Build)',
+    translateX: [0, -200],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 2400,
+    endScroll: 2600
+  },
+  {
+    id: 'process-step-3-entry',
+    name: 'Process Step 4 Entry (Deploy)',
     translateX: [15, 0],
     translateY: [0, 0],
     rotate: [0, 0],
-    startScroll: 100,
-    endScroll: 800
+    startScroll: 1800,
+    endScroll: 2000
   },
-  // Why Different Section Cards
   {
-    id: 'why-different-title',
-    name: 'Why Different Section Title',
+    id: 'process-step-3-exit',
+    name: 'Process Step 4 Exit (Deploy)',
+    translateX: [0, 200],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 2400,
+    endScroll: 2600
+  },
+  // Why Different Section - Dual Animation System (Entry + Exit)
+  {
+    id: 'why-different-title-entry',
+    name: 'Why Different Title Entry',
     translateX: [0, 0],
     translateY: [-20, 10],
     rotate: [0, 0],
-    startScroll: 100,
-    endScroll: 800
+    startScroll: 2800,
+    endScroll: 3000
   },
   {
-    id: 'why-different-0',
-    name: 'Why Different 1 (No Lock-In)',
+    id: 'why-different-title-exit',
+    name: 'Why Different Title Exit',
+    translateX: [0, 0],
+    translateY: [0, -40],
+    rotate: [0, 0],
+    startScroll: 3600,
+    endScroll: 3800
+  },
+  {
+    id: 'why-different-0-entry',
+    name: 'Why Different 1 Entry (No Lock-In)',
     translateX: [0, 0],
     translateY: [20, -10],
     rotate: [0, 0],
-    startScroll: 100,
-    endScroll: 800
+    startScroll: 2850,
+    endScroll: 3050
   },
   {
-    id: 'why-different-1',
-    name: 'Why Different 2 (Fixed Price)',
+    id: 'why-different-0-exit',
+    name: 'Why Different 1 Exit (No Lock-In)',
+    translateX: [0, -300],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 3600,
+    endScroll: 3800
+  },
+  {
+    id: 'why-different-1-entry',
+    name: 'Why Different 2 Entry (Fixed Price)',
     translateX: [0, 0],
     translateY: [25, -12],
     rotate: [0, 0],
-    startScroll: 100,
-    endScroll: 800
+    startScroll: 2900,
+    endScroll: 3100
   },
   {
-    id: 'why-different-2',
-    name: 'Why Different 3 (Built for Growth)',
+    id: 'why-different-1-exit',
+    name: 'Why Different 2 Exit (Fixed Price)',
+    translateX: [0, 300],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 3600,
+    endScroll: 3800
+  },
+  {
+    id: 'why-different-2-entry',
+    name: 'Why Different 3 Entry (Built for Growth)',
     translateX: [0, 0],
     translateY: [30, -14],
     rotate: [0, 0],
-    startScroll: 100,
-    endScroll: 800
+    startScroll: 2950,
+    endScroll: 3150
   },
   {
-    id: 'why-different-3',
-    name: 'Why Different 4 (Radical Honesty)',
+    id: 'why-different-2-exit',
+    name: 'Why Different 3 Exit (Built for Growth)',
+    translateX: [0, -300],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 3600,
+    endScroll: 3800
+  },
+  {
+    id: 'why-different-3-entry',
+    name: 'Why Different 4 Entry (Radical Honesty)',
     translateX: [0, 0],
     translateY: [35, -16],
     rotate: [0, 0],
-    startScroll: 100,
-    endScroll: 800
+    startScroll: 3000,
+    endScroll: 3200
   },
-  // About Section - Real scroll positions at ~4000px
   {
-    id: 'about-title',
-    name: 'About Section Title',
+    id: 'why-different-3-exit',
+    name: 'Why Different 4 Exit (Radical Honesty)',
+    translateX: [0, 300],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 3600,
+    endScroll: 3800
+  },
+  // About Section - Dual Animation System (Entry + Exit)
+  {
+    id: 'about-title-entry',
+    name: 'About Title Entry',
     translateX: [0, 0],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -295,8 +467,17 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 4300
   },
   {
-    id: 'about-content',
-    name: 'About Content Text',
+    id: 'about-title-exit',
+    name: 'About Title Exit',
+    translateX: [0, 0],
+    translateY: [0, -50],
+    rotate: [0, 0],
+    startScroll: 4600,
+    endScroll: 4800
+  },
+  {
+    id: 'about-content-entry',
+    name: 'About Content Entry',
     translateX: [0, 0],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -304,18 +485,36 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 4350
   },
   {
-    id: 'about-features',
-    name: 'About Features Card',
+    id: 'about-content-exit',
+    name: 'About Content Exit',
+    translateX: [0, -400],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 4600,
+    endScroll: 4800
+  },
+  {
+    id: 'about-features-entry',
+    name: 'About Features Entry',
     translateX: [0, 0],
     translateY: [0, 0],
     rotate: [0, 0],
     startScroll: 4200,
     endScroll: 4400
   },
-  // Contact Section - Real scroll positions at ~4800px
   {
-    id: 'contact-title',
-    name: 'Contact Section Title',
+    id: 'about-features-exit',
+    name: 'About Features Exit',
+    translateX: [0, 400],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 4600,
+    endScroll: 4800
+  },
+  // Contact Section - Dual Animation System (Entry + Exit)
+  {
+    id: 'contact-title-entry',
+    name: 'Contact Title Entry',
     translateX: [0, 0],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -323,8 +522,17 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 5000
   },
   {
-    id: 'contact-cta-1',
-    name: 'Contact Email Card',
+    id: 'contact-title-exit',
+    name: 'Contact Title Exit',
+    translateX: [0, 0],
+    translateY: [0, -50],
+    rotate: [0, 0],
+    startScroll: 5400,
+    endScroll: 5600
+  },
+  {
+    id: 'contact-cta-1-entry',
+    name: 'Contact Email Entry',
     translateX: [0, 0],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -332,8 +540,17 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 5050
   },
   {
-    id: 'contact-cta-2',
-    name: 'Contact Phone Card',
+    id: 'contact-cta-1-exit',
+    name: 'Contact Email Exit',
+    translateX: [0, -400],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 5400,
+    endScroll: 5600
+  },
+  {
+    id: 'contact-cta-2-entry',
+    name: 'Contact Phone Entry',
     translateX: [0, 0],
     translateY: [0, 0],
     rotate: [0, 0],
@@ -341,13 +558,31 @@ const DEFAULT_CONFIGS: AnimationConfig[] = [
     endScroll: 5100
   },
   {
-    id: 'contact-final-cta',
-    name: 'Contact Final CTA Button',
+    id: 'contact-cta-2-exit',
+    name: 'Contact Phone Exit',
+    translateX: [0, 400],
+    translateY: [0, 0],
+    rotate: [0, 0],
+    startScroll: 5400,
+    endScroll: 5600
+  },
+  {
+    id: 'contact-final-cta-entry',
+    name: 'Contact Final CTA Entry',
     translateX: [0, 0],
     translateY: [0, 0],
     rotate: [0, 0],
     startScroll: 4950,
     endScroll: 5150
+  },
+  {
+    id: 'contact-final-cta-exit',
+    name: 'Contact Final CTA Exit',
+    translateX: [0, 0],
+    translateY: [0, 100],
+    rotate: [0, 0],
+    startScroll: 5400,
+    endScroll: 5600
   }
 ]
 
