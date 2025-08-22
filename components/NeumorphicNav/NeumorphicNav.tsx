@@ -10,12 +10,20 @@ interface NavItem {
 }
 
 interface NeumorphicNavProps {
-  items: NavItem[]
+  items: (NavItem | string)[]
   defaultActive?: number
+  activeIndex?: number
+  onItemClick?: (index: number) => void
 }
 
-export function NeumorphicNav({ items, defaultActive = 0 }: NeumorphicNavProps) {
-  const [activeIndex, setActiveIndex] = useState(defaultActive)
+export function NeumorphicNav({ 
+  items, 
+  defaultActive = 0,
+  activeIndex: controlledActiveIndex,
+  onItemClick
+}: NeumorphicNavProps) {
+  const [internalActiveIndex, setInternalActiveIndex] = useState(defaultActive)
+  const activeIndex = controlledActiveIndex !== undefined ? controlledActiveIndex : internalActiveIndex
   const [sliderStyle, setSliderStyle] = useState<{ left: string; width: string }>({
     left: '0.25em',
     width: '0px'
@@ -100,9 +108,14 @@ export function NeumorphicNav({ items, defaultActive = 0 }: NeumorphicNavProps) 
     }
   }
 
-  const handleNavClick = (index: number, item: NavItem) => {
-    setActiveIndex(index)
-    if (item.onClick) {
+  const handleNavClick = (index: number, item: NavItem | string) => {
+    if (controlledActiveIndex === undefined) {
+      setInternalActiveIndex(index)
+    }
+    if (onItemClick) {
+      onItemClick(index)
+    }
+    if (typeof item !== 'string' && item.onClick) {
       item.onClick()
     }
   }
@@ -129,7 +142,7 @@ export function NeumorphicNav({ items, defaultActive = 0 }: NeumorphicNavProps) 
             className={`${styles.navItem} ${activeIndex === index ? styles.active : ''}`}
             onClick={() => handleNavClick(index, item)}
           >
-            {item.label}
+            {typeof item === 'string' ? item : item.label}
           </button>
         ))}
       </div>

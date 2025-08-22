@@ -212,6 +212,15 @@
   z-index: 10;
 }
 
+/* Hero Card Animation Class */
+.hero-card-animate {
+  position: relative;
+  z-index: 5;
+  will-change: transform, opacity;
+  transform-origin: center;
+  opacity: 1; /* Fallback opacity in case animation doesn't trigger */
+}
+
 @media (min-width: 1024px) {
   .hero-neumorphic-card {
     padding: 2rem 2.5rem;

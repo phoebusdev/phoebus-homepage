@@ -97,9 +97,117 @@ When adding new neumorphic components:
 ### TypeScript Path Aliases
 Use `@/` for imports: `import { Component } from '@/components/Component/Component'`
 
+## Page Architecture
+
+### App Router Structure
+- **Homepage** (`app/page.tsx`): Hero cards with dual animation system
+- **Services** (`app/services/page.tsx`): Complex entry/exit choreography  
+- **Process** (`app/process/page.tsx`): Reference implementation for all animation patterns
+- **About/Pricing/Contact**: Standard neumorphic layouts
+
+### Component Organization
+Each component follows consistent structure:
+```
+components/[ComponentName]/
+├── [ComponentName].tsx        # Main component logic
+├── [ComponentName].module.css # Component-specific neumorphic effects (optional)
+└── index.ts                   # Export barrel (not implemented)
+```
+
+### Key Components
+- **NeumorphicButton**: Three-layer button with press animations and size variants
+- **NeumorphicCard**: Base container with complex shadow layering patterns
+- **NeumorphicNav**: Animated pill-shaped navigation slider with active state
+- **ServiceCard**: Product showcase cards with hover effects and gradient backgrounds
+- **ScrollDebugTool**: Development-only animation debugging interface
+- **Navigation**: Main site navigation with responsive hamburger menu
+
 ## Common Issues & Solutions
 
 - **Build failures**: Run `npm run typecheck` to identify TypeScript issues
 - **Animation stuttering**: Check for non-transform properties in animations
 - **Style conflicts**: Verify CSS Module naming doesn't conflict with Tailwind classes
 - **Import errors**: Use `@/` path alias for all internal imports
+- **Navigation collision avoidance**: ALWAYS adhere to every step of the navigation collision avoidance approach before making any changes to animations. Account for all other factors, presuming nothing, when calculating collision avoidance (card sizes, section size). Presume nothing.
+
+## Advanced Animation System
+
+### Scroll Debug System
+The codebase includes a comprehensive real-time animation debugging system:
+
+- **ScrollDebugContext**: Central state management for all animations with 80+ predefined configs
+- **DebugParallax**: Individual element wrapper with live debug capabilities  
+- **DualParallax**: Dual animation system (entry/exit) for complex choreography like services cards
+- **ScrollDebugTool**: Visual debugging interface with bulk editing, scroll snap controls, and live preview
+
+**Debug activation**: Add `?debug=true` to URL or set development environment
+
+### Animation Configuration Structure
+```typescript
+interface AnimationConfig {
+  id: string              // Unique identifier for debug targeting
+  name: string            // Human-readable name for debug tool
+  translateX: [number, number]  // [start, end] X translation in pixels
+  translateY: [number, number]  // [start, end] Y translation in pixels  
+  rotate: [number, number]      // [start, end] rotation in degrees
+  startScroll: number           // Scroll position to start animation
+  endScroll: number            // Scroll position to end animation
+}
+```
+
+### Scroll Animation Patterns
+Refer to `ANIMATION_STYLE_GUIDE.md` and `SCROLL_ANIMATION_SYSTEM.md` for:
+- **Stacked Deck Animation**: Cards that start stacked and spread out
+- **Cascading Cards**: Elements sliding in from different directions  
+- **Enhanced Stacked Deck with Bounce**: Fan-out pattern with cubic-bezier easing
+- **Scroll-triggered**: Progress-based animations using 80% viewport start, 20% end
+- **Smooth easing**: `rawProgress * rawProgress * (3 - 2 * rawProgress)`
+
+### Animation Implementation Hook
+```tsx
+function useScrollAnimation() {
+  const sectionRef = useRef<HTMLDivElement>(null)
+  const [progress, setProgress] = useState(0)
+  
+  // Implementation handles viewport calculations and smooth easing
+  // See ANIMATION_STYLE_GUIDE.md for complete pattern
+}
+```
+
+## Asset Generation
+
+### Neumorphic SVG System  
+The project includes a script to generate neumorphic design assets:
+- **Script**: `scripts/generate-neumorphic-images.js`
+- **Output**: `public/images/neumorphic/` (SVG and CSS pairs)
+- **Assets**: Buttons, cards, icons, logo text with various sizes
+- **Usage**: Reference generated CSS classes in components
+
+## Development Workflow
+
+### Debug-First Animation Development
+1. **Enable debug mode**: Add `?debug=true` to URL during development
+2. **Use ScrollDebugTool**: Real-time adjustment of animation parameters
+3. **Copy configurations**: Export final values from debug tool to code
+4. **Test across devices**: Verify mobile performance and reduced motion support
+
+### Section Layout Pattern
+Standard section structure for consistent spacing and animation:
+```tsx
+<section 
+  className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center"
+  data-section="section-name"
+>
+  <div className="max-w-7xl mx-auto w-full">
+    <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+      {/* Animated content */}
+    </div>
+  </div>
+</section>
+```
+
+### Animation Integration Requirements
+- **Transform-only**: No layout-triggering properties (left, top, width, height)
+- **Hardware acceleration**: Use `translateZ(0)` or `will-change: transform` for complex animations
+- **Scroll snap compatibility**: Ensure animations don't interfere with section snap points
+- **Reduced motion**: All animations must respect `prefers-reduced-motion: reduce`

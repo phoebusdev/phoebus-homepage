@@ -5,6 +5,10 @@ import { NeumorphicCard } from '@/components/NeumorphicCard/NeumorphicCard'
 import { Navigation } from '@/components/Navigation/Navigation'
 import { Footer } from '@/components/Footer/Footer'
 import { Icon } from '@/components/Icon/Icon'
+import { ScrollDebugTool } from '@/components/ScrollDebugTool/ScrollDebugTool'
+import { ScrollDebugProvider } from '@/components/ScrollDebugContext/ScrollDebugContext'
+import { DebugParallax, StaticParallax } from '@/components/DebugParallax/DebugParallax'
+import { DualParallax } from '@/components/DualParallax/DualParallax'
 import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 
@@ -13,107 +17,80 @@ const ParallaxProvider = dynamic(
   { ssr: false }
 )
 
-const Parallax = dynamic(
-  () => import('react-scroll-parallax').then(mod => mod.Parallax),
-  { ssr: false }
-)
-
-// Team members data
-const teamMembers = [
+// Why Different data
+const whyDifferentItems = [
   {
-    name: "Alex Chen",
-    role: "Lead Developer",
-    bio: "Full-stack developer with 8+ years building scalable web applications. Passionate about clean code and user experience.",
-    skills: ["React", "Node.js", "PostgreSQL", "AWS"],
-    image: "/team/alex.jpg", // Placeholder
-    color: "bg-gradient-to-br from-[#e8d5f2] to-[#d0e8e3]"
+    icon: "lock_open",
+    title: "No Vendor Lock-In",
+    description: "You own everything. All code, all accounts, all passwords. Our ideal client never needs us again after launch."
   },
   {
-    name: "Sarah Kim",
-    role: "Design Lead",
-    bio: "UI/UX designer focused on creating intuitive interfaces that users love. Believer in design systems and accessibility.",
-    skills: ["Figma", "Design Systems", "UX Research", "Prototyping"],
-    image: "/team/sarah.jpg", // Placeholder
-    color: "bg-gradient-to-br from-[#d0e8e3] to-[#fce4d6]"
-  },
-  {
-    name: "Marcus Rodriguez",
-    role: "DevOps Engineer",
-    bio: "Infrastructure specialist ensuring your applications run smoothly at scale. Expert in cloud architecture and automation.",
-    skills: ["AWS", "Docker", "Kubernetes", "CI/CD"],
-    image: "/team/marcus.jpg", // Placeholder
-    color: "bg-gradient-to-br from-[#fce4d6] to-[#d5e3f0]"
-  }
-]
-
-// Company values data
-const values = [
-  {
-    icon: "transparency",
-    title: "Radical Transparency",
-    description: "No hidden costs, no scope creep, no surprises. We tell you exactly what we're building and why."
-  },
-  {
-    icon: "schedule",
-    title: "Reliable Delivery",
-    description: "Fixed timelines that we actually meet. Your launch date is sacred to us."
-  },
-  {
-    icon: "verified",
-    title: "Quality First",
-    description: "We'd rather build fewer features well than many features poorly. Quality is non-negotiable."
+    icon: "schedule", 
+    title: "Fixed Price, Fixed Timeline",
+    description: "No surprise invoices, no scope creep, no 'monthly maintenance' fees. What we quote is what you pay."
   },
   {
     icon: "trending_up",
-    title: "Future-Proof",
-    description: "Built to scale from day one. Your product grows with your business without rebuilds."
+    title: "Built for Growth",
+    description: "Lean but future-proof architecture. Start minimal but architected for easy expansion when you're ready."
+  },
+  {
+    icon: "verified",
+    title: "Radical Honesty", 
+    description: "We'll talk you out of features you don't need. We tell you what you actually need, not what makes us money."
   }
 ]
 
-// Company stats
-const stats = [
-  { number: "50+", label: "Projects Delivered" },
-  { number: "98%", label: "On-Time Delivery" },
-  { number: "4.9/5", label: "Client Rating" },
-  { number: "100%", label: "Code Ownership" }
+// Service data
+const services = [
+  {
+    title: "Full-Stack Web Applications",
+    icon: "language",
+    description: "Complete web applications that scale. Built lean but architected for growth. From simple sites to complex multi-tenant platforms."
+  },
+  {
+    title: "Mobile Applications", 
+    icon: "phone_iphone",
+    description: "Native and cross-platform mobile apps that actually work. Built for performance and easy updates without app store hassles."
+  },
+  {
+    title: "E-commerce & Business Systems",
+    icon: "shopping_cart", 
+    description: "Complete e-commerce platforms and business systems. Payment processing, inventory management, customer portals - everything you need to run and scale."
+  }
 ]
 
-// Custom hook for stacked deck animation
-function useStackedDeckAnimation() {
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [progress, setProgress] = useState(0)
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (!containerRef.current) return
-
-      const rect = containerRef.current.getBoundingClientRect()
-      const viewportHeight = window.innerHeight
-      
-      const triggerPoint = viewportHeight * 0.5
-      const animationRange = viewportHeight * 1.5
-      
-      const scrollFromTrigger = triggerPoint - rect.top
-      const rawProgress = Math.max(0, Math.min(1, scrollFromTrigger / animationRange))
-      
-      const easedProgress = rawProgress * rawProgress * (3 - 2 * rawProgress)
-      
-      setProgress(easedProgress)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    handleScroll()
-    
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
-
-  return { containerRef, progress }
-}
+// Process steps data
+const processSteps = [
+  {
+    icon: "search",
+    number: "1",
+    title: "Discovery & Reality Check",
+    fullText: "We figure out what you actually need. If we can talk you out of features you don't need, we will."
+  },
+  {
+    icon: "visibility",
+    number: "2", 
+    title: "Free Prototype",
+    fullText: "We build a working prototype at no cost. You see exactly how your product will work before paying a dollar."
+  },
+  {
+    icon: "build",
+    number: "3",
+    title: "Build Phase", 
+    fullText: "Fixed scope, fixed timeline, fixed price. You get daily updates and can see your product being built in real-time."
+  },
+  {
+    icon: "rocket_launch",
+    number: "4",
+    title: "Deploy & Transfer",
+    fullText: "We deploy your product and transfer 100% ownership to you. All code, all accounts, all passwords."
+  }
+]
 
 export default function AboutPage() {
   const [isMobile, setIsMobile] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const { containerRef, progress } = useStackedDeckAnimation()
 
   useEffect(() => {
     setMounted(true)
@@ -127,16 +104,15 @@ export default function AboutPage() {
     return (
       <main className="min-h-screen relative">
         <Navigation />
-        <Footer />
         <div className="relative z-10">
           <section className="relative pt-4 pb-12 md:pt-6 md:pb-16 lg:pt-8 lg:pb-20 px-4 w-full">
             <div className="max-w-6xl mx-auto w-full">
               <div className="hero-neumorphic-card text-center">
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-relaxed font-display break-words neumorphic-text-3d mb-4">
-                  <span className="plastic-tube-text">About Us</span>
+                  <span className="plastic-tube-text">About Phoebus Digital</span>
                 </h1>
                 <p className="text-lg sm:text-xl text-text-secondary max-w-4xl mx-auto mb-8">
-                  Building digital products that actually work, delivered when promised.
+                  Exceptional digital solutions to our personal network with unprecedented speed and value.
                 </p>
               </div>
             </div>
@@ -148,210 +124,521 @@ export default function AboutPage() {
   }
 
   return (
-    <ParallaxProvider 
-      scrollAxis="vertical"
-      isDisabled={isMobile}
-    >
-      <main className="min-h-screen relative">
-        <Navigation />
-        <Footer />
+    <ScrollDebugProvider>
+      <ParallaxProvider 
+        scrollAxis="vertical"
+        isDisabled={isMobile}
+      >
+        <main className="min-h-screen relative">
+          <Navigation />
 
-        <Parallax 
-          translateY={[-20, 20]}
-          className="absolute inset-0 z-0"
-        >
-          <div className="w-full h-[120vh] bg-gradient-to-br from-[rgba(232,213,242,0.03)] via-[rgba(208,232,227,0.03)] to-[rgba(252,228,214,0.02)]" />
-        </Parallax>
+          <StaticParallax 
+            translateY={[-20, 20]}
+            className="absolute inset-0 z-0"
+          >
+            <div className="w-full h-[120vh] bg-gradient-to-br from-[rgba(232,213,242,0.03)] via-[rgba(208,232,227,0.03)] to-[rgba(252,228,214,0.02)]" />
+          </StaticParallax>
 
-        <div className="relative z-10">
-          {/* Hero Section */}
-          <section className="min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
-            <div className="max-w-5xl mx-auto w-full">
-              <div className="transform scale-75 origin-center">
-                <Parallax 
-                  translateY={[-30, 30]} 
-                  scale={[1.05, 0.95]}
-                >
-                  <div className="hero-neumorphic-card text-center">
-                    <div className="relative z-10">
-                      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-relaxed font-display break-words neumorphic-text-3d mb-6">
-                        <span className="plastic-tube-text">About Phoebus Digital</span>
-                      </h1>
-                      <p className="text-xl sm:text-2xl text-text-secondary max-w-3xl mx-auto mb-8">
-                        We're a team of developers and designers who believe <span className="matter-plastic-light">building software 
-                        should be predictable</span>. No drama, no surprises, just <span className="matter-plastic-light">clean code 
-                        delivered on time</span>.
-                      </p>
-                      <div className="flex gap-4 flex-wrap justify-center">
-                        <NeumorphicButton>
-                          Meet the Team
-                        </NeumorphicButton>
-                        <NeumorphicButton>
-                          Our Process
-                        </NeumorphicButton>
+          <div className="relative z-10">
+          {/* Hero Section - Load-Based Card Collage Animation */}
+          <section className="scroll-snap-section min-h-screen py-4 md:py-6 lg:py-8 px-6 md:px-8 lg:px-12 flex items-center" data-section="hero">
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+                <div className="relative">
+                  {/* Card Collage Layout - Row by Row with Flexible Sizing */}
+                  <div className="space-y-4 mb-8">
+                    {/* Row 1: Why Choose + Personal Network */}
+                    <div className="grid grid-cols-12 gap-4">
+                      {/* Why Choose - auto-sized to content */}
+                      <div className="col-span-12 md:col-span-7">
+                        <DualParallax
+                          entryDebugId="digital-products-entry"
+                          exitDebugId="digital-products-exit"
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both',
+                              '--from-x': '-60px',
+                              '--from-y': '-40px',
+                              '--from-rotate': '-8deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split">
+                              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display neumorphic-text-3d">
+                                <span className="plastic-tube-text">Why Choose</span>
+                              </h1>
+                            </div>
+                          </div>
+                        </DualParallax>
+                      </div>
+                      {/* Personal Network - fills remainder */}
+                      <div className="col-span-12 md:col-span-5">
+                        <DualParallax
+                          entryDebugId="no-hidden-fees-entry"
+                          exitDebugId="no-hidden-fees-exit"
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both',
+                              '--from-x': '40px',
+                              '--from-y': '-30px',
+                              '--from-rotate': '5deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split text-center h-full flex flex-col justify-center">
+                              <Icon name="people" className="text-4xl mb-3 text-bronze" />
+                              <p className="text-base text-text-secondary font-medium">Personal Network</p>
+                            </div>
+                          </div>
+                        </DualParallax>
+                      </div>
+                    </div>
+
+                    {/* Row 2: Phoebus Digital + Exceptional Speed */}
+                    <div className="grid grid-cols-12 gap-4">
+                      {/* Phoebus Digital - auto-sized to content */}
+                      <div className="col-span-12 md:col-span-6">
+                        <DualParallax
+                          entryDebugId="built-right-entry"
+                          exitDebugId="built-right-exit"
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both',
+                              '--from-x': '-40px',
+                              '--from-y': '-20px',
+                              '--from-rotate': '-5deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split">
+                              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display neumorphic-text-3d">
+                                <span className="plastic-tube-text">Phoebus Digital?</span>
+                              </h1>
+                            </div>
+                          </div>
+                        </DualParallax>
+                      </div>
+                      {/* Exceptional Speed - fills remainder */}
+                      <div className="col-span-12 md:col-span-6">
+                        <DualParallax
+                          entryDebugId="no-drag-outs-entry"
+                          exitDebugId="no-drag-outs-exit"
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.4s both',
+                              '--from-x': '50px',
+                              '--from-y': '-20px',
+                              '--from-rotate': '8deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split text-center h-full flex flex-col justify-center">
+                              <Icon name="speed" className="text-4xl mb-3 text-sage-green" />
+                              <p className="text-base text-text-secondary font-medium">Exceptional Speed</p>
+                            </div>
+                          </div>
+                        </DualParallax>
+                      </div>
+                    </div>
+
+                    {/* Row 3: High Quality + No Lock-in */}
+                    <div className="grid grid-cols-12 gap-4">
+                      {/* High Quality - auto-sized to content */}
+                      <div className="col-span-12 md:col-span-8">
+                        <DualParallax
+                          entryDebugId="delivered-fast-entry"
+                          exitDebugId="delivered-fast-exit"
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.5s both',
+                              '--from-x': '-30px',
+                              '--from-y': '-10px',
+                              '--from-rotate': '-3deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split">
+                              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display neumorphic-text-3d">
+                                <span className="plastic-tube-text">High Quality</span>
+                              </h1>
+                            </div>
+                          </div>
+                        </DualParallax>
+                      </div>
+                      {/* No Lock-in - fills remainder */}
+                      <div className="col-span-12 md:col-span-4">
+                        <DualParallax
+                          entryDebugId="no-lock-in-entry"
+                          exitDebugId="no-lock-in-exit"
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s both',
+                              '--from-x': '60px',
+                              '--from-y': '-10px',
+                              '--from-rotate': '3deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split text-center h-full flex flex-col justify-center">
+                              <Icon name="lock_open" className="text-4xl mb-3 text-salmon-pink" />
+                              <p className="text-base text-text-secondary font-medium">No Lock-in</p>
+                            </div>
+                          </div>
+                        </DualParallax>
+                      </div>
+                    </div>
+
+                    {/* Row 4: Description - Full width */}
+                    <div className="grid grid-cols-12 gap-4">
+                      <div className="col-span-12">
+                        <DualParallax
+                          entryDebugId="description-card-entry"
+                          exitDebugId="description-card-exit"
+                        >
+                          <div 
+                            className="hero-card-animate"
+                            style={{
+                              animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.7s both',
+                              '--from-x': '0px',
+                              '--from-y': '40px',
+                              '--from-rotate': '0deg'
+                            } as React.CSSProperties}
+                          >
+                            <div className="hero-neumorphic-card-split text-center">
+                              <p className="text-lg sm:text-xl md:text-2xl text-text-secondary max-w-4xl mx-auto">
+                                Founded with a simple mission: provide <span className="matter-plastic-light">exceptional digital solutions</span> to our personal network with <span className="matter-plastic-light">unprecedented speed and value</span>.
+                              </p>
+                            </div>
+                          </div>
+                        </DualParallax>
                       </div>
                     </div>
                   </div>
-                </Parallax>
+
+                  {/* CTA Buttons - Animate in from bottom */}
+                  <div className="flex gap-4 flex-wrap justify-center">
+                    <DualParallax
+                      entryDebugId="cta-button-1-entry"
+                      exitDebugId="cta-button-1-exit"
+                    >
+                      <div 
+                        style={{
+                          animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.8s both',
+                          '--from-x': '-30px',
+                          '--from-y': '40px',
+                          '--from-rotate': '0deg'
+                        } as React.CSSProperties}
+                      >
+                        <NeumorphicButton>
+                          Start Your Project Today
+                        </NeumorphicButton>
+                      </div>
+                    </DualParallax>
+                    
+                    <DualParallax
+                      entryDebugId="cta-button-2-entry"
+                      exitDebugId="cta-button-2-exit"
+                    >
+                      <div 
+                        style={{
+                          animation: 'heroCardEntry 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.9s both',
+                          '--from-x': '30px',
+                          '--from-y': '40px',
+                          '--from-rotate': '0deg'
+                        } as React.CSSProperties}
+                      >
+                        <NeumorphicButton>
+                          Contact Us
+                        </NeumorphicButton>
+                      </div>
+                    </DualParallax>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
 
-          {/* Team Members - Stacked Deck Animation */}
-          <section 
-            ref={containerRef}
-            className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center"
-          >
+          {/* Why Different Section - Grid Layout */}
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="why-different">
             <div className="max-w-7xl mx-auto w-full">
               <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
-                <div className="text-center mb-16">
-                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
-                    Meet Our <span className="plastic-tube-text">Team</span>
-                  </h2>
-                  <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
-                    A small, focused team of experts who have been building digital products 
-                    for over a decade. No account managers, no project coordinators—just builders.
-                  </p>
-                </div>
-                
-                <div className="relative h-96 flex items-center justify-center">
-                  {teamMembers.map((member, idx) => {
-                    const translateY = progress * idx * 180
-                    const rotateX = progress * 10
-                    const scale = 1 - progress * idx * 0.05
-                    const zIndex = 3 - idx
-                    
-                    return (
-                      <div
-                        key={idx}
-                        className="absolute transition-transform duration-75 ease-out"
-                        style={{
-                          transform: `translateY(${translateY}px) rotateX(${rotateX}deg) scale(${scale})`,
-                          zIndex: zIndex,
-                        }}
-                      >
-                        <TeamMemberCard member={member} index={idx} />
-                      </div>
-                    )
-                  })}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Company Values Section */}
-          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
-            <div className="max-w-7xl mx-auto w-full">
-              <div className="transform scale-75 origin-center">
-                <Parallax translateY={[-20, 10]}>
-                  <div className="text-center mb-12">
+                <DualParallax
+                  entryDebugId="why-different-title-entry"
+                  exitDebugId="why-different-title-exit"
+                >
+                  <div className="text-center mb-12 md:mb-16">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
-                      Our <span className="plastic-tube-text">Values</span>
+                      Why We're <span className="plastic-tube-text">Different</span>
                     </h2>
                     <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
-                      These aren't just words on a wall—they guide every decision we make 
-                      and every line of code we write.
+                      Most agencies want to keep you dependent. We want to set you free.
                     </p>
                   </div>
-                </Parallax>
+                </DualParallax>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-                  {values.map((value, idx) => (
-                    <Parallax 
+                  {whyDifferentItems.map((item, idx) => (
+                    <DualParallax
                       key={idx}
-                      translateY={[20 + idx * 5, -10 - idx * 2]}
-                      easing="easeOutQuad"
+                      entryDebugId={`why-different-${idx}-entry`}
+                      exitDebugId={`why-different-${idx}-exit`}
                     >
-                      <ValueCard value={value} index={idx} />
-                    </Parallax>
+                      <WhyDifferentCard item={item} index={idx} />
+                    </DualParallax>
                   ))}
                 </div>
               </div>
             </div>
           </section>
 
-          {/* Stats Section */}
-          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center">
-            <div className="max-w-5xl mx-auto w-full">
-              <div className="transform scale-75 origin-center">
-                <Parallax translateY={[-15, 15]}>
-                  <div className="text-center mb-12">
+          {/* Services Section - Standardized Layout */}
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="services">
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+                <DebugParallax 
+                  debugId="services-title"
+                  translateX={[0, 0]}
+                  translateY={[0, 0]}
+                  rotate={[0, 0]}
+                  startScroll={100}
+                  endScroll={800}
+                >
+                  <div className="text-center mb-16">
                     <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
-                      Track Record That <span className="plastic-tube-text">Speaks</span>
+                      Products That <span className="plastic-tube-text">Work</span>, Not Projects That Drag On
                     </h2>
-                    <p className="text-lg md:text-xl text-text-secondary">
-                      Numbers don't lie. Our clients get what they pay for, when they expect it.
+                    <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
+                      We build lean but future-proof. Every project starts minimal but architected for easy expansion. 
+                      No rebuilds needed when you want to add features later.
                     </p>
                   </div>
-                </Parallax>
+                </DebugParallax>
                 
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {stats.map((stat, idx) => (
-                    <Parallax 
+                {/* Services Cards Grid - Dual Animation System */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                  {services.map((service, idx) => (
+                    <DualParallax
                       key={idx}
-                      translateY={[30 + idx * 10, -15]}
-                      easing="easeOutQuad"
+                      entryDebugId={`services-card-${idx}-entry`}
+                      exitDebugId={`services-card-${idx}-exit`}
                     >
-                      <StatCard stat={stat} index={idx} />
-                    </Parallax>
+                      <NeumorphicCard className={`h-48 ${['bg-gradient-to-br from-[#e8d5f2] to-[#d0e8e3]', 'bg-gradient-to-br from-[#d0e8e3] to-[#fce4d6]', 'bg-gradient-to-br from-[#fce4d6] to-[#d5e3f0]'][idx % 3]}`}>
+                        <div className="text-center p-6">
+                          <Icon name={service.icon} className="text-4xl text-text-primary mb-3" />
+                          <h3 className="text-xl font-display neumorphic-text-3d mb-3">{service.title}</h3>
+                          <p className="text-sm text-text-secondary line-clamp-3">{service.description}</p>
+                        </div>
+                      </NeumorphicCard>
+                    </DualParallax>
                   ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Contact Section */}
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="contact">
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+                <DualParallax
+                  entryDebugId="contact-title-entry"
+                  exitDebugId="contact-title-exit"
+                >
+                  <div className="text-center mb-12 md:mb-16">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
+                      Get Your <span className="plastic-tube-text">Free Prototype</span>
+                    </h2>
+                    <p className="text-lg md:text-xl text-text-secondary max-w-3xl mx-auto">
+                      Ready to transform your vision into reality? Start with a completely free prototype and see how our streamlined approach can bring your digital dreams to life.
+                    </p>
+                  </div>
+                </DualParallax>
+                
+                {/* Contact CTA Cards */}
+                <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                  <DualParallax
+                    entryDebugId="contact-cta-1-entry"
+                    exitDebugId="contact-cta-1-exit"
+                  >
+                    <NeumorphicCard className="text-center p-8 h-full">
+                      <Icon name="mail" className="text-4xl text-salmon-pink mb-4" />
+                      <h3 className="text-xl font-display neumorphic-text-3d mb-3">Email Us</h3>
+                      <p className="text-text-secondary mb-4">For detailed inquiries and project discussions</p>
+                      <p className="text-sm font-mono text-text-primary bg-surface-secondary px-3 py-2 rounded-lg">
+                        phoebusdigitalsolutions@gmail.com
+                      </p>
+                    </NeumorphicCard>
+                  </DualParallax>
+                  
+                  <DualParallax
+                    entryDebugId="contact-cta-2-entry"
+                    exitDebugId="contact-cta-2-exit"
+                  >
+                    <NeumorphicCard className="text-center p-8 h-full">
+                      <Icon name="phone" className="text-4xl text-sage-green mb-4" />
+                      <h3 className="text-xl font-display neumorphic-text-3d mb-3">Call Us</h3>
+                      <p className="text-text-secondary mb-4">For immediate assistance and consultations</p>
+                      <p className="text-sm font-mono text-text-primary bg-surface-secondary px-3 py-2 rounded-lg">
+                        +1 (416) 768-1201
+                      </p>
+                    </NeumorphicCard>
+                  </DualParallax>
+                </div>
+                
+                {/* Final CTA */}
+                <DualParallax
+                  entryDebugId="contact-final-cta-entry"
+                  exitDebugId="contact-final-cta-exit"
+                >
+                  <div className="text-center mt-12">
+                    <NeumorphicButton>
+                      Get Your Free Prototype
+                    </NeumorphicButton>
+                  </div>
+                </DualParallax>
+              </div>
+            </div>
+          </section>
+
+          {/* Process Section - Regular Layout */}
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="process">
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+                <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center">
+                  <DualParallax
+                    entryDebugId="process-title-entry"
+                    exitDebugId="process-title-exit"
+                  >
+                    <div>
+                      <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
+                        Your Journey From <span className="plastic-tube-text">Concept To Launch</span>
+                      </h2>
+                      <p className="text-lg md:text-xl text-text-secondary">
+                        We've designed a streamlined process that gets your project from idea to reality 
+                        with exceptional speed and quality, starting with a completely free prototype.
+                      </p>
+                    </div>
+                  </DualParallax>
+                  
+                  <div className="space-y-6">
+                    {processSteps.map((step, idx) => (
+                      <DualParallax
+                        key={idx}
+                        entryDebugId={`process-step-${idx}-entry`}
+                        exitDebugId={`process-step-${idx}-exit`}
+                      >
+                        <div className="card-solution4 expanded">
+                          <div className="icon-neumorphic">
+                            <Icon name={step.icon} />
+                          </div>
+                          <div className="content-solution4">
+                            <h3 className="text-lg font-display neumorphic-text-3d mb-2">
+                              {step.title}
+                            </h3>
+                            <p className="text-sm text-text-secondary">
+                              {step.fullText}
+                            </p>
+                          </div>
+                        </div>
+                      </DualParallax>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* About Section */}
+          <section className="scroll-snap-section min-h-screen py-32 md:py-40 lg:py-48 px-6 md:px-8 lg:px-12 flex items-center" data-section="about">
+            <div className="max-w-7xl mx-auto w-full">
+              <div className="transform scale-75 origin-center" style={{ overflow: 'visible' }}>
+                <DualParallax
+                  entryDebugId="about-title-entry"
+                  exitDebugId="about-title-exit"
+                >
+                  <div className="text-center mb-12 md:mb-16">
+                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-display neumorphic-text-3d mb-6">
+                      Why Choose <span className="plastic-tube-text">Phoebus Digital?</span>
+                    </h2>
+                  </div>
+                </DualParallax>
+                
+                {/* About Content Grid */}
+                <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-center">
+                  <DualParallax
+                    entryDebugId="about-content-entry"
+                    exitDebugId="about-content-exit"
+                  >
+                    <div className="space-y-6">
+                      <p className="text-lg md:text-xl text-text-secondary">
+                        Phoebus Digital was founded with a simple mission: provide exceptional digital solutions to our personal network with unprecedented speed and value.
+                      </p>
+                      <p className="text-lg md:text-xl text-text-secondary">
+                        By limiting our client base to our extended network, we can maintain the highest standards of quality while offering exceptional pricing and turnaround times that traditional agencies simply cannot match.
+                      </p>
+                      <div className="pt-4">
+                        <NeumorphicButton>
+                          Start Your Project Today
+                        </NeumorphicButton>
+                      </div>
+                    </div>
+                  </DualParallax>
+                  
+                  <DualParallax
+                    entryDebugId="about-features-entry"
+                    exitDebugId="about-features-exit"
+                  >
+                    <NeumorphicCard className="p-8">
+                      <div className="space-y-4">
+                        {[
+                          "Years of industry experience across multiple sectors",
+                          "Exclusive focus on our personal network for higher quality",
+                          "Streamlined development methodology for faster delivery",
+                          "Passion for creating elegant, high-performing digital solutions",
+                          "Commitment to transparent communication throughout the process"
+                        ].map((feature, idx) => (
+                          <div key={idx} className="flex items-start gap-3">
+                            <Icon name="check_circle" className="text-xl text-sage-green mt-1 flex-shrink-0" />
+                            <span className="text-text-secondary">{feature}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </NeumorphicCard>
+                  </DualParallax>
                 </div>
               </div>
             </div>
           </section>
         </div>
         <Footer />
+        
+        {/* Debug Tool - only shows in development or when debug=scroll is in URL */}
+        <ScrollDebugTool />
       </main>
     </ParallaxProvider>
+  </ScrollDebugProvider>
   )
 }
 
-// Team Member Card Component
-function TeamMemberCard({ member, index }: { member: any, index: number }) {
-  return (
-    <NeumorphicCard className={`w-80 h-64 ${member.color}`}>
-      <div className="text-center p-6">
-        <div className="w-16 h-16 bg-gradient-to-br from-shadow-light to-shadow-dark rounded-full mx-auto mb-3 flex items-center justify-center">
-          <Icon name="person" className="text-2xl text-text-primary" />
-        </div>
-        <h3 className="text-xl font-display neumorphic-text-3d mb-1">{member.name}</h3>
-        <div className="text-sm text-accent-sage font-display mb-2">{member.role}</div>
-        <p className="text-xs text-text-secondary line-clamp-3 mb-3">{member.bio}</p>
-        <div className="flex flex-wrap gap-1 justify-center">
-          {member.skills.slice(0, 3).map((skill: string, idx: number) => (
-            <span key={idx} className="text-xs bg-white/20 rounded px-2 py-1">
-              {skill}
-            </span>
-          ))}
-        </div>
-      </div>
-    </NeumorphicCard>
-  )
-}
-
-// Value Card Component
-function ValueCard({ value, index }: { value: any, index: number }) {
+// Why Different Card Component
+function WhyDifferentCard({ item, index }: { item: any, index: number }) {
   return (
     <NeumorphicCard className="h-full">
-      <div className="text-center p-6">
-        <Icon name={value.icon} className="text-4xl text-text-primary mb-4" />
+      <div className="text-center">
+        <Icon name={item.icon} className="text-4xl text-text-primary mb-4" />
         <h3 className="text-xl font-display neumorphic-text-3d mb-3">
-          {value.title}
+          {item.title}
         </h3>
         <p className="text-text-secondary">
-          {value.description}
+          {item.description}
         </p>
       </div>
-    </NeumorphicCard>
-  )
-}
-
-// Stat Card Component
-function StatCard({ stat, index }: { stat: any, index: number }) {
-  return (
-    <NeumorphicCard className="text-center p-6">
-      <div className="text-3xl font-bold text-text-primary mb-2">{stat.number}</div>
-      <div className="text-sm text-text-secondary font-display">{stat.label}</div>
     </NeumorphicCard>
   )
 }
