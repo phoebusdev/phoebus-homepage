@@ -20,20 +20,18 @@ export function NeumorphicButton({
   type = 'button',
   disabled = false
 }: NeumorphicButtonProps) {
-  const sizeClasses = {
-    small: 'text-sm px-4 py-2',
-    medium: 'text-base px-6 py-3',
-    large: 'text-lg px-8 py-4'
-  }
-  
   return (
     <button 
       type={type}
-      className={`${styles.button} ${sizeClasses[size]} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} 
+      className={`${styles.button} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} 
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
     >
-      {children}
+      <div className={styles.buttonOuter}>
+        <div className={styles.buttonInner}>
+          <span>{children}</span>
+        </div>
+      </div>
     </button>
   )
 }
