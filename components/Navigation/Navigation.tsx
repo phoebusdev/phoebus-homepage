@@ -1,7 +1,7 @@
 "use client"
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import React, { useState, useEffect } from 'react'
 import styles from './Navigation.module.css'
 import { NeumorphicButton } from '../NeumorphicButton/NeumorphicButton'
@@ -12,6 +12,7 @@ import { NeumorphicCard } from '../NeumorphicCard/NeumorphicCard'
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
 
   const navItems = [
     { label: 'Home', href: '/' },
@@ -20,6 +21,12 @@ export function Navigation() {
     { label: 'Pricing', href: '/pricing' },
     { label: 'About', href: '/about' }
   ]
+
+  // Calculate the correct active index based on current pathname
+  const getCurrentPageIndex = () => {
+    const activeIndex = navItems.findIndex(item => item.href === pathname)
+    return activeIndex >= 0 ? activeIndex : 0
+  }
 
   const handleNavClick = (item: { href?: string }) => {
     if (item.href) {
@@ -62,7 +69,7 @@ export function Navigation() {
                   ...item,
                   onClick: () => handleNavClick(item)
                 }))}
-                defaultActive={0}
+                defaultActive={getCurrentPageIndex()}
               />
             </div>
             <div className={styles.navMobile}>

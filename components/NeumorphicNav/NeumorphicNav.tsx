@@ -29,6 +29,13 @@ export function NeumorphicNav({ items, defaultActive = 0 }: NeumorphicNavProps) 
     setMounted(true)
   }, [])
 
+  // Sync activeIndex with defaultActive prop changes (for route navigation)
+  useEffect(() => {
+    if (defaultActive !== activeIndex) {
+      setActiveIndex(defaultActive)
+    }
+  }, [defaultActive, activeIndex])
+
   // Update slider position when activeIndex changes
   useEffect(() => {
     if (mounted) {
