@@ -1,73 +1,89 @@
-/* Clean neumorphic button - cream theme version of reference design */
+/* Based on Uiverse neumorphic button - adapted for cream theme with dynamic sizing */
 .button {
   display: flex;
   align-items: center;
   justify-content: center;
   outline: none;
   cursor: pointer;
-  border: 1px solid #d4cfc7;
-  border-radius: 2em;
   background-image: linear-gradient(to top, #e2ddd5 0%, #f5f0e8 80%, #ffffff 100%);
+  border-radius: 30px;
+  border: 1px solid #d4cfc7;
   transition: all 0.2s ease;
   font-family: "Montserrat", system-ui, sans-serif;
-  font-size: 0.875rem;
-  font-weight: 500;
+  font-size: 14px;
+  font-weight: 600;
   color: #4a4a4a;
-  text-shadow: 0 1px rgba(255, 255, 255, 0.5);
+  text-shadow: 0 1px #fff;
   padding: 0.75em 1.5em;
-  min-height: 2.5rem;
-  white-space: nowrap;
+  min-height: 50px;
 }
 
 .button:hover {
-  background-image: linear-gradient(to top, #d4cfc7 0%, #e8e3db 80%, #f5f0e8 100%);
   box-shadow: 
-    0 2px 4px rgba(212, 207, 199, 0.3),
-    0 4px 8px rgba(212, 207, 199, 0.2),
-    inset 0 1px 2px rgba(255, 255, 255, 0.4);
+    0 4px 3px 1px #ffffff, 
+    0 6px 8px #e2ddd5, 
+    0 -4px 4px #d4cfc7, 
+    0 -6px 4px #ffffff, 
+    inset 0 0 3px 3px #d4cfc7;
 }
 
-.button:active,
-.button:focus {
-  background-image: linear-gradient(to top, #d0cbc3 0%, #e0dbd3 80%, #f0ebe3 100%);
+.button:active {
   box-shadow: 
-    inset 0 2px 4px rgba(212, 207, 199, 0.4),
-    inset 0 4px 8px rgba(212, 207, 199, 0.2),
-    0 1px 2px rgba(255, 255, 255, 0.3);
-  transform: translateY(1px);
+    0 4px 3px 1px #ffffff, 
+    0 6px 8px #e2ddd5, 
+    0 -4px 4px #d4cfc7, 
+    0 -6px 4px #ffffff, 
+    inset 0 0 5px 3px #bbb, 
+    inset 0 0 30px #ccc;
+}
+
+.button:focus {
+  box-shadow: 
+    0 4px 3px 1px #ffffff, 
+    0 6px 8px #e2ddd5, 
+    0 -4px 4px #d4cfc7, 
+    0 -6px 4px #ffffff, 
+    inset 0 0 5px 3px #bbb, 
+    inset 0 0 30px #ccc;
 }
 
 /* Size variants */
 .button.small {
   padding: 0.5em 1em;
-  font-size: 0.75rem;
-  min-height: 2rem;
+  font-size: 12px;
+  min-height: 40px;
+  border-radius: 20px;
 }
 
 .button.medium {
   padding: 0.75em 1.5em;
-  font-size: 0.875rem;
-  min-height: 2.5rem;
+  font-size: 14px;
+  min-height: 50px;
+  border-radius: 25px;
 }
 
 .button.large {
   padding: 1em 2em;
-  font-size: 1rem;
-  min-height: 3rem;
+  font-size: 16px;
+  min-height: 60px;
+  border-radius: 30px;
 }
 
 /* Mobile responsive */
 @media (max-width: 768px) {
   .button {
-    font-size: 0.75rem;
+    font-size: 13px;
     padding: 0.6em 1.2em;
-    min-height: 2.25rem;
+    min-height: 45px;
+    border-radius: 22px;
   }
   
   .button:hover {
     box-shadow: 
-      0 1px 2px rgba(212, 207, 199, 0.2),
-      0 2px 4px rgba(212, 207, 199, 0.1),
-      inset 0 1px 2px rgba(255, 255, 255, 0.3);
+      0 3px 2px 1px #ffffff, 
+      0 4px 6px #e2ddd5, 
+      0 -3px 3px #d4cfc7, 
+      0 -4px 3px #ffffff, 
+      inset 0 0 2px 2px #d4cfc7;
   }
 }
