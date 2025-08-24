@@ -2,7 +2,6 @@
 
 import { NeumorphicButton } from '@/components/NeumorphicButton/NeumorphicButton'
 import { NeumorphicCard } from '@/components/NeumorphicCard/NeumorphicCard'
-import { Navigation } from '@/components/Navigation/Navigation'
 import { ServiceCard } from '@/components/ServiceCard/ServiceCard'
 import { NeumorphicNav } from '@/components/NeumorphicNav/NeumorphicNav'
 import { Icon } from '@/components/Icon/Icon'
@@ -16,7 +15,6 @@ export default function TestComponents() {
         {/* Navigation */}
       <div className="mb-20">
         <h2 className="text-2xl font-bold mb-8">Navigation Component:</h2>
-        <Navigation />
       </div>
 
       {/* Logo Text */}
@@ -33,9 +31,13 @@ export default function TestComponents() {
       <div className="mb-20">
         <h2 className="text-2xl font-bold mb-8">Neumorphic Nav Pills:</h2>
         <NeumorphicNav 
-          items={['Strategy', 'Design', 'Development', 'Growth']}
-          activeIndex={0}
-          onItemClick={() => {}}
+          items={[
+            { label: 'Strategy' },
+            { label: 'Design' },
+            { label: 'Development' },
+            { label: 'Growth' }
+          ]}
+          defaultActive={0}
         />
       </div>
 

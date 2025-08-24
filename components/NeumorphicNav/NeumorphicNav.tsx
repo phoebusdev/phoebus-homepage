@@ -10,20 +10,12 @@ interface NavItem {
 }
 
 interface NeumorphicNavProps {
-  items: (NavItem | string)[]
+  items: NavItem[]
   defaultActive?: number
-  activeIndex?: number
-  onItemClick?: (index: number) => void
 }
 
-export function NeumorphicNav({ 
-  items, 
-  defaultActive = 0,
-  activeIndex: controlledActiveIndex,
-  onItemClick
-}: NeumorphicNavProps) {
-  const [internalActiveIndex, setInternalActiveIndex] = useState(defaultActive)
-  const activeIndex = controlledActiveIndex !== undefined ? controlledActiveIndex : internalActiveIndex
+export function NeumorphicNav({ items, defaultActive = 0 }: NeumorphicNavProps) {
+  const [activeIndex, setActiveIndex] = useState(defaultActive)
   const [sliderStyle, setSliderStyle] = useState<{ left: string; width: string }>({
     left: '0.25em',
     width: '0px'
@@ -79,7 +71,7 @@ export function NeumorphicNav({
       })
       resizeObserver.observe(containerRef.current)
     }
-
+    
     return () => {
       cancelAnimationFrame(rafId)
       clearTimeout(timer)
@@ -93,14 +85,14 @@ export function NeumorphicNav({
   const updateSliderPosition = (index: number) => {
     const activeButton = navRefs.current[index]
     const container = containerRef.current
-
+    
     if (activeButton && container) {
       const containerRect = container.getBoundingClientRect()
       const buttonRect = activeButton.getBoundingClientRect()
-
+      
       const left = buttonRect.left - containerRect.left
       const width = buttonRect.width
-
+      
       setSliderStyle({
         left: `${left}px`,
         width: `${width}px`
@@ -108,14 +100,9 @@ export function NeumorphicNav({
     }
   }
 
-  const handleNavClick = (index: number, item: NavItem | string) => {
-    if (controlledActiveIndex === undefined) {
-      setInternalActiveIndex(index)
-    }
-    if (onItemClick) {
-      onItemClick(index)
-    }
-    if (typeof item !== 'string' && item.onClick) {
+  const handleNavClick = (index: number, item: NavItem) => {
+    setActiveIndex(index)
+    if (item.onClick) {
       item.onClick()
     }
   }
@@ -123,8 +110,8 @@ export function NeumorphicNav({
   return (
     <div className={styles.navWrapper}>
       <div className={styles.navContainer} ref={containerRef}>
-        <div
-          className={styles.navSlider}
+        <div 
+          className={styles.navSlider} 
           style={sliderStyle}
         />
         {items.map((item, index) => (
@@ -142,7 +129,7 @@ export function NeumorphicNav({
             className={`${styles.navItem} ${activeIndex === index ? styles.active : ''}`}
             onClick={() => handleNavClick(index, item)}
           >
-            {typeof item === 'string' ? item : item.label}
+            {item.label}
           </button>
         ))}
       </div>

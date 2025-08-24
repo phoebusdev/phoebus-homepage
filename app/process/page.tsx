@@ -1,10 +1,8 @@
 'use client'
 
-import { Navigation } from '@/components/Navigation/Navigation'
 import { NeumorphicButton } from '@/components/NeumorphicButton/NeumorphicButton'
 import { NeumorphicCard } from '@/components/NeumorphicCard/NeumorphicCard'
 import { Icon } from '@/components/Icon/Icon'
-import { Footer } from '@/components/Footer/Footer'
 import { PrototypeModal } from '@/components/PrototypeModal/PrototypeModal'
 import { usePrototypeModal } from '@/hooks/usePrototypeModal'
 
@@ -114,7 +112,6 @@ export default function ProcessPage() {
 
   return (
     <main className="relative">
-      <Navigation />
       
       {/* Hero Section */}
       <section className="min-h-screen flex items-center justify-center px-6 md:px-8 lg:px-12 py-16">
@@ -267,7 +264,6 @@ export default function ProcessPage() {
         </div>
       </section>
       
-      <Footer />
       
       <PrototypeModal 
         isOpen={isOpen} 

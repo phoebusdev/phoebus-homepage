@@ -1,4 +1,7 @@
 import type { Metadata } from 'next'
+import { Montserrat, Chivo_Mono } from 'next/font/google'
+import { Navigation } from '@/components/Navigation/Navigation'
+import { Footer } from '@/components/Footer/Footer'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -16,17 +19,35 @@ export const metadata: Metadata = {
   },
 }
 
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-montserrat",
+  weight: ["300", "400", "500", "600", "700"],
+})
+
+const chivoMono = Chivo_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-chivo-mono",
+  weight: ["300", "400", "700"],
+})
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className="antialiased">
+    <html lang="en" className={`${montserrat.variable} ${chivoMono.variable}`}>
+      <body className={`${montserrat.className} antialiased min-h-screen relative overflow-x-hidden`}>
         <div className="animated-gradient-bg fixed inset-0 -z-10"></div>
         <div className="frosted-glass-bg fixed inset-0 -z-5"></div>
-        {children}
+        <div className="relative z-10">
+          <Navigation />
+          {children}
+          <Footer />
+        </div>
       </body>
     </html>
   )
