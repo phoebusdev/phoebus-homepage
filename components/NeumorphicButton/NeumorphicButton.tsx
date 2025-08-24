@@ -33,11 +33,7 @@ export function NeumorphicButton({
       onClick={disabled ? undefined : onClick}
       disabled={disabled}
     >
-      <div className={styles.buttonOuter}>
-        <div className={styles.buttonInner}>
-          <span>{children}</span>
-        </div>
-      </div>
+      {children}
     </button>
   )
 }
