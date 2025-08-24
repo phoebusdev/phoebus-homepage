@@ -9,6 +9,7 @@ interface NeumorphicButtonProps {
   className?: string
   size?: 'small' | 'medium' | 'large'
   type?: 'button' | 'submit' | 'reset'
+  disabled?: boolean
 }
 
 export function NeumorphicButton({ 
@@ -16,7 +17,8 @@ export function NeumorphicButton({
   onClick, 
   className = '',
   size = 'medium',
-  type = 'button'
+  type = 'button',
+  disabled = false
 }: NeumorphicButtonProps) {
   const sizeClasses = {
     small: 'text-sm px-4 py-2',
@@ -27,8 +29,9 @@ export function NeumorphicButton({
   return (
     <button 
       type={type}
-      className={`${styles.button} ${sizeClasses[size]} ${className}`} 
-      onClick={onClick}
+      className={`${styles.button} ${sizeClasses[size]} ${className} ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`} 
+      onClick={disabled ? undefined : onClick}
+      disabled={disabled}
     >
       <div className={styles.buttonOuter}>
         <div className={styles.buttonInner}>
