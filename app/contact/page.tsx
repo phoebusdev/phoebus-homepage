@@ -148,7 +148,10 @@ export default function ContactPage() {
             <NeumorphicButton size="large" onClick={openModal}>
               Get Your Free Prototype
             </NeumorphicButton>
-            <NeumorphicButton size="large">
+            <NeumorphicButton 
+              size="large" 
+              onClick={() => window.open('mailto:phoebusdigitalsolutions@gmail.com?subject=Schedule%20a%20Call&body=Hi%2C%0A%0AI%27d%20like%20to%20schedule%20a%20call%20to%20discuss%20my%20project.%0A%0APlease%20let%20me%20know%20your%20availability.%0A%0AThanks%21', '_blank')}
+            >
               Schedule a Call
             </NeumorphicButton>
           </div>

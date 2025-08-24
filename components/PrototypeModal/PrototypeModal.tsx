@@ -76,9 +76,9 @@ export function PrototypeModal({ isOpen, onClose, source }: PrototypeModalProps)
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-        <NeumorphicCard>
-          <div className="p-6 md:p-8">
+      <div className="max-w-2xl w-full h-fit max-h-[95vh] flex flex-col">
+        <NeumorphicCard className="flex-1 overflow-hidden">
+          <div className="p-4 md:p-6 h-full flex flex-col">
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl md:text-3xl font-bold plastic-tube-text">
                 Get Your Free Prototype
@@ -111,7 +111,7 @@ export function PrototypeModal({ isOpen, onClose, source }: PrototypeModalProps)
                   See exactly what you'll get before making any commitment.
                 </p>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-3 flex-1 flex flex-col">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-bold text-text-primary mb-2">
@@ -186,7 +186,7 @@ export function PrototypeModal({ isOpen, onClose, source }: PrototypeModalProps)
                       name="message"
                       value={formData.message}
                       onChange={handleInputChange}
-                      rows={4}
+                      rows={3}
                       className="w-full p-3 rounded-lg border border-[#d4cfc7] bg-white/50 text-text-primary focus:outline-none focus:ring-2 focus:ring-[#d4cfc7]"
                       placeholder="Tell us about your project idea, goals, and any specific requirements..."
                     />
