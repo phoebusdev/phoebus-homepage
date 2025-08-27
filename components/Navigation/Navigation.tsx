@@ -1,18 +1,19 @@
 "use client"
 
 import Link from 'next/link'
-import { useRouter, usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import React, { useState, useEffect } from 'react'
 import styles from './Navigation.module.css'
 import { NeumorphicButton } from '../NeumorphicButton/NeumorphicButton'
 import { NeumorphicHamburger } from '../NeumorphicHamburger/NeumorphicHamburger'
 import { NeumorphicNav } from '../NeumorphicNav/NeumorphicNav'
 import { NeumorphicCard } from '../NeumorphicCard/NeumorphicCard'
+import { useNavigationTransition } from '@/hooks/useNavigationTransition'
 
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const router = useRouter()
   const pathname = usePathname()
+  const { navigate } = useNavigationTransition()
 
   const navItems = [
     { label: 'Home', href: '/' },
@@ -30,7 +31,7 @@ export function Navigation() {
 
   const handleNavClick = (item: { href?: string }) => {
     if (item.href) {
-      router.push(item.href)
+      navigate(item.href)
     }
   }
 
@@ -115,7 +116,7 @@ export function Navigation() {
                 ))}
                 <NeumorphicButton
                   onClick={() => {
-                    router.push('/contact')
+                    navigate('/contact')
                     setMobileMenuOpen(false)
                   }}
                 >

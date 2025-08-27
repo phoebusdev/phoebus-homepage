@@ -1,15 +1,15 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { NeumorphicButton } from '@/components/NeumorphicButton/NeumorphicButton'
 import { NeumorphicCard } from '@/components/NeumorphicCard/NeumorphicCard'
 import { ServiceCard } from '@/components/ServiceCard/ServiceCard'
 import { Icon } from '@/components/Icon/Icon'
 import { PrototypeModal } from '@/components/PrototypeModal/PrototypeModal'
 import { usePrototypeModal } from '@/hooks/usePrototypeModal'
+import { useNavigationTransition } from '@/hooks/useNavigationTransition'
 
 export default function Home() {
-  const router = useRouter()
+  const { navigate } = useNavigationTransition()
   const { isOpen, openModal, closeModal } = usePrototypeModal()
   const services = [
     {
@@ -152,7 +152,7 @@ export default function Home() {
             <NeumorphicButton size="large" onClick={openModal}>
               Get Your Free Prototype
             </NeumorphicButton>
-            <NeumorphicButton size="large" onClick={() => router.push('/process')}>
+            <NeumorphicButton size="large" onClick={() => navigate('/process')}>
               See Our Approach
             </NeumorphicButton>
           </div>

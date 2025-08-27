@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import { Montserrat, Chivo_Mono } from 'next/font/google'
 import { Navigation } from '@/components/Navigation/Navigation'
 import { Footer } from '@/components/Footer/Footer'
+import { PageTransitionProvider } from '@/contexts/PageTransitionContext'
+import { PageTransitionWrapper } from '@/components/PageTransitionWrapper/PageTransitionWrapper'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -41,13 +43,17 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${montserrat.variable} ${chivoMono.variable}`}>
       <body className={`${montserrat.className} antialiased min-h-screen relative overflow-x-hidden`}>
-        <div className="animated-gradient-bg fixed inset-0 -z-10"></div>
-        <div className="frosted-glass-bg fixed inset-0 -z-5"></div>
-        <div className="relative z-10">
-          <Navigation />
-          {children}
-          <Footer />
-        </div>
+        <PageTransitionProvider>
+          <div className="animated-gradient-bg fixed inset-0 -z-10"></div>
+          <div className="frosted-glass-bg fixed inset-0 -z-5"></div>
+          <div className="relative z-10">
+            <Navigation />
+            <PageTransitionWrapper>
+              {children}
+            </PageTransitionWrapper>
+            <Footer />
+          </div>
+        </PageTransitionProvider>
       </body>
     </html>
   )

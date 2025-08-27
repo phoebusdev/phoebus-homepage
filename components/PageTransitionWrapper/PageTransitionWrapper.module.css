@@ -1,0 +1,48 @@
+.pageWrapper {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  transform: translateX(0);
+  will-change: transform;
+}
+
+/* Forward navigation: current page exits left, new page enters from right */
+.slideForward {
+  animation: slideInFromRight 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Backward navigation: current page exits right, new page enters from left */
+.slideBackward {
+  animation: slideInFromLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .pageWrapper {
+    transition: none;
+  }
+  
+  .enterFromRight,
+  .enterFromLeft {
+    animation: none;
+    transform: translateX(0);
+  }
+}
