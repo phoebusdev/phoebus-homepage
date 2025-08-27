@@ -2,32 +2,58 @@
   width: 100%;
   min-height: 100vh;
   position: relative;
-  transform: translateX(0);
+  overflow: hidden; /* Hide content outside viewport */
+}
+
+/* Container that holds both pages side by side during transition */
+.slideContainer {
+  display: flex;
+  width: 200%; /* Two pages side by side */
+  min-height: 100vh;
+  position: relative;
   will-change: transform;
 }
 
-/* Forward navigation: current page exits left, new page enters from right */
-.slideForward {
-  animation: slideInFromRight 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+/* Each page during transition takes exactly half the container (full viewport width) */
+.slideContainer .pageContent {
+  width: 50%;
+  min-height: 100vh;
+  flex-shrink: 0;
+  position: relative;
 }
 
-/* Backward navigation: current page exits right, new page enters from left */
-.slideBackward {
-  animation: slideInFromLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+/* Normal page content when not transitioning */
+.pageWrapper > .pageContent {
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
 }
 
-@keyframes slideInFromRight {
+/* Forward navigation: slide container left to show right page */
+.slideContainer.slideForward {
+  animation: slideContainerLeft 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Backward navigation: slide container right from offset position */
+.slideContainer.slideBackward {
+  transform: translateX(-50%); /* Start with new page visible */
+  animation: slideContainerRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* Slide the entire container left (old page exits left, new page enters from right) */
+@keyframes slideContainerLeft {
   from {
-    transform: translateX(100%);
-  }
-  to {
     transform: translateX(0);
   }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
-@keyframes slideInFromLeft {
+/* Slide the entire container right (new page enters from left, old page exits right) */
+@keyframes slideContainerRight {
   from {
-    transform: translateX(-100%);
+    transform: translateX(-50%);
   }
   to {
     transform: translateX(0);

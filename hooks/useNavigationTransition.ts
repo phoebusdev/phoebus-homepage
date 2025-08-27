@@ -13,19 +13,19 @@ export function useNavigationTransition() {
     // Don't navigate if we're already there or transitioning
     if (href === pathname || isTransitioning) return
 
-    // Start the transition
+    // Start the transition BEFORE navigation to capture old content
     startTransition(pathname, href)
     
-    // Small delay to let exit animation start
+    // Small delay to let the PageTransitionWrapper capture the old content
     setTimeout(() => {
       router.push(href)
       setCurrentPath(href)
-      
-      // End transition after animation completes
-      setTimeout(() => {
-        endTransition()
-      }, 450)
-    }, 50)
+    }, 10)
+    
+    // End transition after animation completes
+    setTimeout(() => {
+      endTransition()
+    }, 550) // Match animation duration plus buffer
   }, [pathname, router, startTransition, endTransition, setCurrentPath, isTransitioning])
 
   return { navigate }
