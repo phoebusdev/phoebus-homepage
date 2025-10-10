@@ -1,0 +1,184 @@
+openapi: 3.0.3
+info:
+  title: Phoebus Digital Contact Form API
+  description: API endpoint for homepage contact form submissions with Resend email integration
+  version: 1.0.0
+  contact:
+    name: Phoebus Digital
+    email: contact@phoebusdigital.com
+
+servers:
+  - url: https://phoebusdigital.com
+    description: Production server
+  - url: http://localhost:3000
+    description: Local development server
+
+paths:
+  /api/contact:
+    post:
+      summary: Submit contact form
+      description: |
+        Accepts contact form submissions, validates the input, and sends an email
+        to the configured admin email address via Resend API. Tracks successful
+        submissions in Vercel Analytics.
+      operationId: submitContactForm
+      tags:
+        - Contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContactFormRequest'
+            examples:
+              valid:
+                summary: Valid contact form submission
+                value:
+                  name: "Jane Smith"
+                  email: "jane@example.com"
+                  phone: "+1-555-123-4567"
+                  projectDescription: "Looking to build a custom e-commerce platform for our handmade furniture business. Need inventory management, payment processing, and customer portal."
+              minimal:
+                summary: Minimal submission (no phone)
+                value:
+                  name: "John Doe"
+                  email: "john@example.com"
+                  phone: null
+                  projectDescription: "Interested in discussing a web application project."
+      responses:
+        '200':
+          description: Contact form submitted successfully, email sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactFormSuccessResponse'
+              example:
+                success: true
+                message: "Thank you! We'll respond within 24 hours"
+        '400':
+          description: Validation error - invalid or missing required fields
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactFormErrorResponse'
+              examples:
+                invalidEmail:
+                  summary: Invalid email format
+                  value:
+                    success: false
+                    message: "Validation failed"
+                    errors:
+                      email: "Please enter a valid email address"
+                missingFields:
+                  summary: Missing required fields
+                  value:
+                    success: false
+                    message: "Validation failed"
+                    errors:
+                      name: "Name is required"
+                      projectDescription: "Project description is required"
+                tooLong:
+                  summary: Project description too long
+                  value:
+                    success: false
+                    message: "Validation failed"
+                    errors:
+                      projectDescription: "Project description must be 2000 characters or less"
+        '429':
+          description: Rate limit exceeded - too many requests from this IP
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactFormErrorResponse'
+              example:
+                success: false
+                message: "Too many requests. Please try again in 60 seconds"
+                errors: {}
+        '500':
+          description: Server error - email service failure or internal error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ContactFormErrorResponse'
+              example:
+                success: false
+                message: "Failed to send email. Please try again or contact us directly at contact@phoebusdigital.com"
+                errors: {}
+      security: []
+
+components:
+  schemas:
+    ContactFormRequest:
+      type: object
+      required:
+        - name
+        - email
+        - projectDescription
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 100
+          pattern: "^[a-zA-Z\\s'-]+$"
+          description: Full name of the contact person
+          example: "Jane Smith"
+        email:
+          type: string
+          format: email
+          maxLength: 255
+          description: Valid email address
+          example: "jane@example.com"
+        phone:
+          type: string
+          nullable: true
+          pattern: "^[\\+]?[(]?[0-9]{1,4}[)]?[-\\s\\.]?[(]?[0-9]{1,4}[)]?[-\\s\\.]?[0-9]{1,9}$"
+          description: Optional phone number in international format
+          example: "+1-555-123-4567"
+        projectDescription:
+          type: string
+          minLength: 10
+          maxLength: 2000
+          description: Description of the project or inquiry
+          example: "Looking to build a custom e-commerce platform for our handmade furniture business. Need inventory management, payment processing, and customer portal."
+
+    ContactFormSuccessResponse:
+      type: object
+      required:
+        - success
+        - message
+      properties:
+        success:
+          type: boolean
+          description: Indicates successful submission
+          example: true
+        message:
+          type: string
+          description: Success message to display to user
+          example: "Thank you! We'll respond within 24 hours"
+
+    ContactFormErrorResponse:
+      type: object
+      required:
+        - success
+        - message
+      properties:
+        success:
+          type: boolean
+          description: Indicates failed submission
+          example: false
+        message:
+          type: string
+          description: Error message to display to user
+          example: "Validation failed"
+        errors:
+          type: object
+          description: Field-specific error messages
+          additionalProperties:
+            type: string
+          example:
+            email: "Please enter a valid email address"
+            projectDescription: "Project description is required"
+
+tags:
+  - name: Contact
+    description: Contact form submission endpoints
