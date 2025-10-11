@@ -20,10 +20,10 @@ export default function HomePage() {
   const closeContactForm = () => setIsContactFormOpen(false)
 
   // Animation hooks for each section
-  const heroAnimation = useIntersectionAnimation({ threshold: 0.1, triggerOnce: true })
-  const servicesAnimation = useIntersectionAnimation({ threshold: 0.1, triggerOnce: true })
-  const processAnimation = useIntersectionAnimation({ threshold: 0.1, triggerOnce: true })
-  const whyDifferentAnimation = useIntersectionAnimation({ threshold: 0.1, triggerOnce: true })
+  const heroAnimation = useIntersectionAnimation<HTMLDivElement>({ threshold: 0.1, triggerOnce: true })
+  const servicesAnimation = useIntersectionAnimation<HTMLElement>({ threshold: 0.1, triggerOnce: true })
+  const processAnimation = useIntersectionAnimation<HTMLElement>({ threshold: 0.1, triggerOnce: true })
+  const whyDifferentAnimation = useIntersectionAnimation<HTMLElement>({ threshold: 0.1, triggerOnce: true })
 
   return (
     <main id="main-content" className="min-h-screen relative">

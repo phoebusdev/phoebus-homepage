@@ -12,12 +12,12 @@ interface ProcessCardProps {
 }
 
 export function ProcessCard({ step, index }: ProcessCardProps) {
-  const { ref: animRef, isVisible } = useIntersectionAnimation({
+  const { ref: animRef, isVisible } = useIntersectionAnimation<HTMLDivElement>({
     threshold: 0.3,
     triggerOnce: true
   })
 
-  const { ref: tiltRef, style: tiltStyle, handlers } = useMagneticTilt({
+  const { ref: tiltRef, style: tiltStyle, handlers } = useMagneticTilt<HTMLDivElement>({
     maxTilt: 2,
     scale: 1.005,
     perspective: 1200

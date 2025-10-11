@@ -18,12 +18,12 @@ export function ServiceCard({
   icon,
   delay = "1"
 }: ServiceCardProps) {
-  const { ref: animRef, isVisible } = useIntersectionAnimation({
+  const { ref: animRef, isVisible } = useIntersectionAnimation<HTMLDivElement>({
     threshold: 0.2,
     triggerOnce: true
   })
 
-  const { ref: tiltRef, style: tiltStyle, handlers } = useMagneticTilt({
+  const { ref: tiltRef, style: tiltStyle, handlers } = useMagneticTilt<HTMLDivElement>({
     maxTilt: 3,
     scale: 1.01,
     perspective: 1200

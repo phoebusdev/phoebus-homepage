@@ -1,13 +1,13 @@
 <!--
 Sync Impact Report:
-- Version: 0.0.0 → 1.0.0
-- Change Type: Initial constitution creation
-- Modified Principles: N/A (new constitution)
-- Added Sections: All sections (initial creation)
-- Removed Sections: N/A
+- Version: 1.1.0 → 2.0.0
+- Change Type: Major amendment (principle simplified)
+- Modified Principles: IX - Animation Standards (removed philosophy, simplified to technical standards)
+- Added Sections: N/A
+- Removed Sections: "Near-Miss Parallax Choreography" philosophy language
 - Templates Status:
   ✅ plan-template.md - Constitution Check section ready for use
-  ✅ spec-template.md - Aligned with accessibility and design preservation requirements
+  ✅ spec-template.md - Aligned with accessibility, design, and animation requirements
   ✅ tasks-template.md - Aligned with test-driven and incremental delivery approach
 - Follow-up TODOs: None
 -->
@@ -136,6 +136,62 @@ Each user story MUST be independently testable and demonstrable before moving to
 
 **Rationale**: Incremental validation catches issues early and ensures each delivery adds value without breaking previous work.
 
+### IX. Animation Standards
+
+All animations MUST be performant, accessible, and enhance the neumorphic design without compromising usability.
+
+**Technical Requirements**:
+- Animations MUST use Intersection Observer API (NO scroll event listeners)
+- Animations MUST use GPU-accelerated properties ONLY:
+  - ✅ `transform: translate()`, `scale()`, `rotate()`, `perspective()`
+  - ✅ `opacity` (initial state only)
+  - ❌ NO `top`, `left`, `width`, `height`, `margin`, `padding`, `background-position`
+- Animations MUST respect `prefers-reduced-motion` at both CSS and JavaScript levels
+- Animations MUST maintain 60fps (verified in Chrome DevTools Performance tab)
+- Animation system bundle impact MUST be < 10KB gzipped per page
+
+**Animation Implementation**:
+- **Scroll-triggered animations**: Use `useIntersectionAnimation` hook
+  - Threshold: 0.1-0.3 depending on element size
+  - Trigger once: `true` for entrance animations
+  - Duration: 500-750ms depending on element type
+  - Easing: `cubic-bezier(0.4, 0, 0.2, 1)` or `cubic-bezier(0.34, 1.56, 0.64, 1)`
+- **Stagger delays**: 50-150ms between sequential elements
+- **Desktop hover effects**: Use `useMagneticTilt` hook for card interactions
+  - Small/medium cards: `maxTilt: 3°`, `scale: 1.01`, `perspective: 1200px`
+  - Large/wide cards: `maxTilt: 2°`, `scale: 1.005`, `perspective: 1200px`
+  - Transition: 100ms hover response, 500ms return to neutral
+
+**Device-Specific Behavior**:
+- **Desktop (≥ 1024px)**: Full animations + hover tilt
+- **Tablet (768-1023px)**: Full animations + hover tilt
+- **Mobile (< 768px)**: Simplified animations, NO hover tilt
+
+**Accessibility Requirements** (NON-NEGOTIABLE):
+- ALL animated elements MUST include reduced motion CSS:
+  ```css
+  @media (prefers-reduced-motion: reduce) {
+    .animated-element {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+  ```
+- Keyboard navigation MUST remain unaffected by animations
+- Focus indicators MUST remain visible during animations
+- Screen readers MUST NOT announce animation states
+- Content MUST be accessible immediately (no animation-gated content)
+
+**Performance Gates**:
+- Lighthouse Performance: ≥ 90 (mobile), ≥ 95 (desktop)
+- Cumulative Layout Shift (CLS): 0
+- Frame rate: 60fps maintained during all animations
+- JavaScript bundle increase: < 10KB gzipped per page
+
+**Rationale**: Animations add polish and visual interest when implemented with performance and accessibility discipline. This principle ensures animations enhance rather than compromise the user experience.
+
 ## Quality Gates
 
 Every feature implementation MUST pass these gates before completion:
@@ -248,4 +304,4 @@ This constitution supersedes all other development practices and preferences. Wh
 - DESIGN_SYSTEM.md provides design implementation details
 - All three documents must remain synchronized
 
-**Version**: 1.0.0 | **Ratified**: 2025-10-09 | **Last Amended**: 2025-10-09
+**Version**: 2.0.0 | **Ratified**: 2025-10-09 | **Last Amended**: 2025-10-11

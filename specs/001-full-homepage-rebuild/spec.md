@@ -128,47 +128,46 @@ A visitor encounters an unexpected error (network failure, component crash, form
 
 ---
 
-### User Story 7 - Tasteful Dynamic Motion (Priority: P7 - Enhancement)
+### User Story 7 - Page Animations (Priority: P7 - Enhancement)
 
-A visitor scrolls through the homepage and experiences smooth, choreographed animations that bring the neumorphic design to life. Elements enter the viewport with staggered timing, creating a sense of depth and physical movement without being distracting or impacting performance.
+A visitor scrolls through the homepage and sees smooth animations as sections come into view. Cards animate in when scrolled to, and desktop users see subtle tilt effects when hovering over cards.
 
-**Why this priority**: Motion enhances brand perception and engagement. Well-executed animations differentiate the site from static competitors while maintaining the sophisticated "soft plastic realism" aesthetic.
+**Why this priority**: Animations add polish and visual interest without compromising performance or accessibility.
 
 **Independent Test**: Can be tested by scrolling through all sections, observing animations trigger as elements enter viewport, verifying 60fps performance, and testing with `prefers-reduced-motion` enabled to ensure animations are disabled.
 
 **Acceptance Scenarios**:
 
-1. **Given** a visitor lands on the homepage, **When** the page loads, **Then** the hero section animates with a gentle scale-up and slide-up effect, followed by staggered headline reveals (80ms, 160ms, 240ms, 360ms, 480ms, 520ms delays)
-2. **Given** a visitor scrolls to the services section, **When** the section enters the viewport, **Then** service cards slide up from below with 150ms stagger between each card
-3. **Given** a visitor scrolls to the process section, **When** the section enters the viewport, **Then** process cards slide in from alternating directions (left, right, left, right) creating a wave effect with 150ms stagger
-4. **Given** a visitor scrolls to "Why We're Different" section, **When** the section enters the viewport, **Then** cards expand radially from the center point with 150ms stagger
-5. **Given** a visitor hovers over a service card, **When** the cursor enters the card, **Then** the card scales up slightly (1.02x) and begins tracking cursor position with subtle 3D perspective tilt (max 5 degrees)
-6. **Given** a visitor hovers over a process card, **When** the cursor enters the card, **Then** the card scales up slightly (1.01x) and tilts magnetically following cursor position (max 4 degrees)
-7. **Given** a visitor hovers over a "Why Different" card, **When** the cursor enters the card, **Then** the card scales up (1.02x) and tilts in 3D space tracking cursor movement (max 5 degrees)
-8. **Given** a visitor moves their cursor across a hovered card, **When** the cursor moves, **Then** the card tilts smoothly following the cursor with 100ms response time and returns to neutral over 500ms when cursor leaves
-9. **Given** a visitor has `prefers-reduced-motion: reduce` enabled, **When** they scroll through the page, **Then** all animations and magnetic tilt effects are disabled and content appears immediately
+1. **Given** a visitor lands on the homepage, **When** the page loads, **Then** the hero section animates with a scale-up and slide-up effect, with headline lines appearing in sequence
+2. **Given** a visitor scrolls to the services section, **When** the section enters the viewport, **Then** service cards slide up from below with 150ms delay between each card
+3. **Given** a visitor scrolls to the process section, **When** the section enters the viewport, **Then** process cards slide in from alternating left and right directions with 150ms delay between cards
+4. **Given** a visitor scrolls to "Why We're Different" section, **When** the section enters the viewport, **Then** cards slide in with radial expansion effect
+5. **Given** a visitor hovers over a service card on desktop, **When** the cursor enters the card, **Then** the card scales up slightly (1.01x) and tilts subtly following cursor position (max 3 degrees)
+6. **Given** a visitor hovers over a process card on desktop, **When** the cursor enters the card, **Then** the card scales up slightly (1.005x) and tilts following cursor position (max 2 degrees)
+7. **Given** a visitor hovers over a "Why Different" card on desktop, **When** the cursor enters the card, **Then** the card scales up (1.01x) and tilts following cursor movement (max 3 degrees)
+8. **Given** a visitor moves their cursor across a hovered card, **When** the cursor moves, **Then** the card tilts smoothly with 100ms response time and returns to neutral over 500ms when cursor leaves
+9. **Given** a visitor has `prefers-reduced-motion: reduce` enabled, **When** they scroll through the page, **Then** all animations and tilt effects are disabled and content appears immediately
 10. **Given** a visitor is on mobile (< 768px), **When** they view the page, **Then** magnetic tilt effects are disabled and only scroll-triggered animations play
-11. **Given** a visitor scrolls quickly through multiple sections, **When** animations trigger, **Then** page maintains 60fps scroll performance with no jank
+11. **Given** a visitor scrolls quickly through multiple sections, **When** animations trigger, **Then** page maintains 60fps scroll performance
 
 **Technical Requirements**:
-- Use Intersection Observer API for scroll-triggered animations (lightweight, performant)
+- Use Intersection Observer API for scroll-triggered animations
 - All animations use GPU-accelerated properties only (`transform`, `opacity`)
-- No scroll event listeners (heavy performance cost)
-- Magnetic tilt uses `mousemove` event listeners (attached on hover only, not globally)
+- No scroll event listeners
+- Magnetic tilt uses `mousemove` event listeners (attached on hover only)
 - Magnetic tilt uses 3D transforms with `perspective`, `rotateX`, `rotateY`
-- Animation JavaScript payload under 8KB gzipped (includes both hooks)
+- Animation JavaScript payload under 8KB gzipped
 - Respects `prefers-reduced-motion` preference (disables all animations and tilt)
-- Magnetic tilt disabled on mobile (< 768px) for performance
+- Magnetic tilt disabled on mobile (< 768px)
 - Works without JavaScript (progressive enhancement - content visible, animations don't run)
 
-**Design Philosophy**: "Near-Miss Parallax Choreography"
-- **No Fading**: Elements move through physical space, never fade in/out
-- **Individual Movement**: Each element has its own timing and trajectory
-- **Near-Miss Timing**: Elements appear to almost collide but pass smoothly
-- **Velocity Awareness**: Movement speed affects other elements
-- **Scroll Physics**: User scroll speed influences animation characteristics
-
-**Reference**: Complete implementation plan available in `MOTION_DESIGN_PLAN.md`
+**Animation Specifications**:
+- Hero: Scale and slide animations with staggered timing
+- Service cards: Slide up from below with 150ms stagger
+- Process cards: Alternate left/right slide with 150ms stagger
+- Why Different cards: Radial expansion with scale
+- Desktop hover: Subtle 3D tilt following cursor position
+- All animations: 500-750ms duration with smooth easing
 
 ---
 
@@ -379,4 +378,4 @@ A visitor scrolls through the homepage and experiences smooth, choreographed ani
 
 14. **Domain**: Will use Vercel-provided domain initially; custom domain can be configured later.
 
-15. **Motion & Animation**: Scroll-triggered animations will use Intersection Observer API (not scroll event listeners or react-scroll-parallax). All animations will follow the "Near-Miss Parallax Choreography" philosophy from DESIGN_SYSTEM.md. Detailed motion plan available in `MOTION_DESIGN_PLAN.md`.
+15. **Motion & Animation**: Scroll-triggered animations use Intersection Observer API. Desktop hover interactions use magnetic tilt effect. All animations use GPU-accelerated properties and respect reduced motion preferences. See `MOTION_DESIGN_PLAN.md` for implementation details.
