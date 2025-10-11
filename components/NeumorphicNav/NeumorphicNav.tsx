@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
 import styles from './NeumorphicNav.module.css'
 
 interface NavItem {
@@ -18,71 +18,13 @@ export function NeumorphicNav({ items, defaultActive = 0 }: NeumorphicNavProps) 
   const [activeIndex, setActiveIndex] = useState(defaultActive)
   const [sliderStyle, setSliderStyle] = useState<{ left: string; width: string }>({
     left: '0.25em',
-    width: '0px'
+    width: '100px' // Start with a reasonable default instead of 0px
   })
-  const [mounted, setMounted] = useState(false)
   const navRefs = useRef<(HTMLButtonElement | null)[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
+  const [isMounted, setIsMounted] = useState(false)
 
-  // Use useLayoutEffect for immediate DOM measurements
-  useLayoutEffect(() => {
-    setMounted(true)
-  }, [])
-
-  // Update slider position when activeIndex changes
-  useEffect(() => {
-    if (mounted) {
-      updateSliderPosition(activeIndex)
-    }
-  }, [activeIndex, mounted])
-
-  // Multiple strategies to ensure initial position is set
-  useEffect(() => {
-    if (!mounted) return
-
-    // Strategy 1: Immediate update
-    updateSliderPosition(activeIndex)
-
-    // Strategy 2: RequestAnimationFrame
-    const rafId = requestAnimationFrame(() => {
-      updateSliderPosition(activeIndex)
-    })
-
-    // Strategy 3: Small delay for complex layouts
-    const timer = setTimeout(() => {
-      updateSliderPosition(activeIndex)
-    }, 50)
-
-    // Strategy 4: Window load event
-    const handleLoad = () => {
-      updateSliderPosition(activeIndex)
-    }
-    window.addEventListener('load', handleLoad)
-
-    // Strategy 5: ResizeObserver for layout shifts
-    let resizeObserver: ResizeObserver | null = null
-    if (containerRef.current && typeof ResizeObserver !== 'undefined') {
-      let resizeTimeout: NodeJS.Timeout
-      resizeObserver = new ResizeObserver(() => {
-        clearTimeout(resizeTimeout)
-        resizeTimeout = setTimeout(() => {
-          updateSliderPosition(activeIndex)
-        }, 10)
-      })
-      resizeObserver.observe(containerRef.current)
-    }
-
-    return () => {
-      cancelAnimationFrame(rafId)
-      clearTimeout(timer)
-      window.removeEventListener('load', handleLoad)
-      if (resizeObserver) {
-        resizeObserver.disconnect()
-      }
-    }
-  }, [mounted, activeIndex])
-
-  const updateSliderPosition = (index: number) => {
+  const updateSliderPosition = useCallback((index: number) => {
     const activeButton = navRefs.current[index]
     const container = containerRef.current
 
@@ -90,15 +32,55 @@ export function NeumorphicNav({ items, defaultActive = 0 }: NeumorphicNavProps) 
       const containerRect = container.getBoundingClientRect()
       const buttonRect = activeButton.getBoundingClientRect()
 
-      const left = buttonRect.left - containerRect.left
-      const width = buttonRect.width
-
       setSliderStyle({
-        left: `${left}px`,
-        width: `${width}px`
+        left: `${buttonRect.left - containerRect.left}px`,
+        width: `${buttonRect.width}px`
       })
     }
-  }
+  }, [])
+
+  // Mount effect - set initial position
+  useEffect(() => {
+    setIsMounted(true)
+
+    // Multiple fallbacks to ensure slider positions correctly
+    const timeouts = [
+      setTimeout(() => updateSliderPosition(activeIndex), 0),
+      setTimeout(() => updateSliderPosition(activeIndex), 50),
+      setTimeout(() => updateSliderPosition(activeIndex), 100),
+    ]
+
+    return () => {
+      timeouts.forEach(clearTimeout)
+    }
+  }, [activeIndex, updateSliderPosition])
+
+  // ResizeObserver-only approach - handles all layout changes
+  useEffect(() => {
+    const container = containerRef.current
+    if (!container || !isMounted) return
+
+    // Use requestAnimationFrame to ensure DOM is ready before measuring
+    const updatePosition = () => {
+      requestAnimationFrame(() => {
+        updateSliderPosition(activeIndex)
+      })
+    }
+
+    // Initial position
+    updatePosition()
+
+    // ResizeObserver for layout changes (font loading, resize, dynamic content)
+    const resizeObserver = new ResizeObserver(() => {
+      updatePosition()
+    })
+
+    resizeObserver.observe(container)
+
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [activeIndex, updateSliderPosition, isMounted])
 
   const handleNavClick = (index: number, item: NavItem) => {
     setActiveIndex(index)
@@ -119,12 +101,6 @@ export function NeumorphicNav({ items, defaultActive = 0 }: NeumorphicNavProps) 
             key={index}
             ref={el => {
               navRefs.current[index] = el
-              // Update slider position when the active button ref is set
-              if (el && index === activeIndex && mounted) {
-                requestAnimationFrame(() => {
-                  updateSliderPosition(activeIndex)
-                })
-              }
             }}
             className={`${styles.navItem} ${activeIndex === index ? styles.active : ''}`}
             onClick={() => handleNavClick(index, item)}

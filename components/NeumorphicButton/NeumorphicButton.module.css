@@ -56,6 +56,10 @@
   z-index: 1;
   border-radius: inherit;
   padding: 1em 1.5em;
+  /* Explicit flexbox centering for text alignment */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   /* Cream background matching cards with subtle gradient bleed-through */
   background: linear-gradient(
     135deg,
@@ -118,7 +122,9 @@
   -webkit-background-clip: text;
   background-clip: text;
   transition: transform 250ms ease;
-  display: block;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
   will-change: transform;
   text-shadow: rgba(255, 255, 255, 0.3) 0 1px 0;
   -webkit-user-select: none;
@@ -135,6 +141,16 @@
   transform: scale(0.975);
 }
 
+/* Full width variant for mobile menus */
+.button.fullWidth {
+  width: 100%;
+}
+
+.button.fullWidth .buttonOuter,
+.button.fullWidth .buttonInner {
+  width: 100%;
+}
+
 /* Mobile-specific adjustments for less aggressive shadows */
 @media (max-width: 768px) {
   .buttonOuter {
@@ -142,6 +158,13 @@
       0 0.01em 0.01em -0.005em rgba(5, 5, 5, 0.2),
       0 0.005em 0.005em -0.005em rgba(5, 5, 5, 0.1),
       0.02em 0.05em 0.02em -0.005em rgba(5, 5, 5, 0.1);
+  }
+
+  .button:hover .buttonOuter {
+    box-shadow:
+      0 0 0 0 rgba(5, 5, 5, 1),
+      0 0 0 0 rgba(5, 5, 5, 0.5),
+      0 0 0 0 rgba(5, 5, 5, 0.25);
   }
 
   .buttonInner {

@@ -1,0 +1,34 @@
+/* Skip Navigation Link - Only visible on keyboard focus */
+
+.skipLink {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  z-index: 9999;
+  padding: 1rem 1.5rem;
+  background: #f5f0e8;
+  color: #2a2a2a;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 0 0 15px 0;
+  box-shadow:
+    8px 8px 16px #d4cfc7,
+    -8px -8px 16px #ffffff;
+  transition: top 0.2s ease;
+}
+
+.skipLink:focus {
+  top: 0;
+  outline: 3px solid #4a90e2;
+  outline-offset: 4px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .skipLink:focus {
+    outline-width: 4px;
+    outline-color: currentColor;
+  }
+}

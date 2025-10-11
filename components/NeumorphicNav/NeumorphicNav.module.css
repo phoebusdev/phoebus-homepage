@@ -49,6 +49,7 @@
 .navSlider {
   position: absolute;
   z-index: 1;
+  top: 0.25em;
   left: 0.25em;
   border-radius: 50em; /* Fully rounded pill shape */
   height: calc(100% - 0.5em);
@@ -64,6 +65,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 50px; /* Ensure slider is visible even during calculation */
 }
 
 /* Mobile responsive */

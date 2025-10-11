@@ -2,16 +2,19 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './Navigation.module.css'
 import { NeumorphicButton } from '../NeumorphicButton/NeumorphicButton'
 import { NeumorphicHamburger } from '../NeumorphicHamburger/NeumorphicHamburger'
 import { NeumorphicNav } from '../NeumorphicNav/NeumorphicNav'
 import { NeumorphicCard } from '../NeumorphicCard/NeumorphicCard'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 
 export function Navigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const router = useRouter()
+  const mobileMenuRef = useFocusTrap<HTMLDivElement>(mobileMenuOpen)
+  const hamburgerRef = useRef<HTMLButtonElement>(null)
 
   const navItems = [
     { label: 'Home', href: '/' },
@@ -50,10 +53,10 @@ export function Navigation() {
   return (
     <>
       {/* Navigation */}
-      <nav className={styles.navigation}>
+      <nav className={styles.navigation} aria-label="Main navigation">
         <div className={styles.navInner}>
           <div className={styles.navContent}>
-            <Link href="/" className="plastic-tube-text text-2xl">
+            <Link href="/" className="plastic-tube-text text-2xl" aria-label="Phoebus Digital home">
               phoebusdigital
             </Link>
             <div className={styles.navDesktop}>
@@ -67,8 +70,12 @@ export function Navigation() {
             </div>
             <div className={styles.navMobile}>
               <NeumorphicHamburger
+                ref={hamburgerRef}
                 isOpen={mobileMenuOpen}
                 onToggle={() => setMobileMenuOpen(!mobileMenuOpen)}
+                aria-expanded={mobileMenuOpen}
+                aria-controls="mobile-menu"
+                aria-label="Toggle mobile menu"
               />
             </div>
           </div>
@@ -85,8 +92,13 @@ export function Navigation() {
               setMobileMenuOpen(false)
             }
           }}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation menu"
         >
           <div
+            id="mobile-menu"
+            ref={mobileMenuRef}
             className={styles.mobileMenuContainer}
             onClick={(e) => {
               // Prevent closing when clicking inside the container
@@ -94,10 +106,11 @@ export function Navigation() {
             }}
           >
             <NeumorphicCard>
-              <div className={styles.mobileMenuItems}>
+              <nav className={styles.mobileMenuItems} aria-label="Mobile menu navigation">
                 {navItems.map((item, index) => (
                   <NeumorphicButton
                     key={index}
+                    fullWidth={true}
                     onClick={() => {
                       handleNavClick(item)
                       setMobileMenuOpen(false)
@@ -107,6 +120,7 @@ export function Navigation() {
                   </NeumorphicButton>
                 ))}
                 <NeumorphicButton
+                  fullWidth={true}
                   onClick={() => {
                     router.push('/contact')
                     setMobileMenuOpen(false)
@@ -114,7 +128,7 @@ export function Navigation() {
                 >
                   Contact Us
                 </NeumorphicButton>
-              </div>
+              </nav>
             </NeumorphicCard>
           </div>
         </div>

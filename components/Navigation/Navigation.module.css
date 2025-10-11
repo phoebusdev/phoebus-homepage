@@ -68,8 +68,14 @@
 .mobileMenuItems {
   display: flex;
   flex-direction: column;
+  align-items: stretch;
   gap: 1rem;
   padding: 1rem;
+  width: 100%;
+}
+
+.mobileMenuItems button {
+  width: 100%;
 }
 
 /* Tablet and Desktop */

@@ -128,16 +128,60 @@ A visitor encounters an unexpected error (network failure, component crash, form
 
 ---
 
+### User Story 7 - Tasteful Dynamic Motion (Priority: P7 - Enhancement)
+
+A visitor scrolls through the homepage and experiences smooth, choreographed animations that bring the neumorphic design to life. Elements enter the viewport with staggered timing, creating a sense of depth and physical movement without being distracting or impacting performance.
+
+**Why this priority**: Motion enhances brand perception and engagement. Well-executed animations differentiate the site from static competitors while maintaining the sophisticated "soft plastic realism" aesthetic.
+
+**Independent Test**: Can be tested by scrolling through all sections, observing animations trigger as elements enter viewport, verifying 60fps performance, and testing with `prefers-reduced-motion` enabled to ensure animations are disabled.
+
+**Acceptance Scenarios**:
+
+1. **Given** a visitor lands on the homepage, **When** the page loads, **Then** the hero section animates with a gentle scale-up and slide-up effect, followed by staggered headline reveals (80ms, 160ms, 240ms, 360ms, 480ms, 520ms delays)
+2. **Given** a visitor scrolls to the services section, **When** the section enters the viewport, **Then** service cards slide up from below with 150ms stagger between each card
+3. **Given** a visitor scrolls to the process section, **When** the section enters the viewport, **Then** process cards slide in from alternating directions (left, right, left, right) creating a wave effect with 150ms stagger
+4. **Given** a visitor scrolls to "Why We're Different" section, **When** the section enters the viewport, **Then** cards expand radially from the center point with 150ms stagger
+5. **Given** a visitor hovers over a service card, **When** the cursor enters the card, **Then** the card scales up slightly (1.02x) and begins tracking cursor position with subtle 3D perspective tilt (max 5 degrees)
+6. **Given** a visitor hovers over a process card, **When** the cursor enters the card, **Then** the card scales up slightly (1.01x) and tilts magnetically following cursor position (max 4 degrees)
+7. **Given** a visitor hovers over a "Why Different" card, **When** the cursor enters the card, **Then** the card scales up (1.02x) and tilts in 3D space tracking cursor movement (max 5 degrees)
+8. **Given** a visitor moves their cursor across a hovered card, **When** the cursor moves, **Then** the card tilts smoothly following the cursor with 100ms response time and returns to neutral over 500ms when cursor leaves
+9. **Given** a visitor has `prefers-reduced-motion: reduce` enabled, **When** they scroll through the page, **Then** all animations and magnetic tilt effects are disabled and content appears immediately
+10. **Given** a visitor is on mobile (< 768px), **When** they view the page, **Then** magnetic tilt effects are disabled and only scroll-triggered animations play
+11. **Given** a visitor scrolls quickly through multiple sections, **When** animations trigger, **Then** page maintains 60fps scroll performance with no jank
+
+**Technical Requirements**:
+- Use Intersection Observer API for scroll-triggered animations (lightweight, performant)
+- All animations use GPU-accelerated properties only (`transform`, `opacity`)
+- No scroll event listeners (heavy performance cost)
+- Magnetic tilt uses `mousemove` event listeners (attached on hover only, not globally)
+- Magnetic tilt uses 3D transforms with `perspective`, `rotateX`, `rotateY`
+- Animation JavaScript payload under 8KB gzipped (includes both hooks)
+- Respects `prefers-reduced-motion` preference (disables all animations and tilt)
+- Magnetic tilt disabled on mobile (< 768px) for performance
+- Works without JavaScript (progressive enhancement - content visible, animations don't run)
+
+**Design Philosophy**: "Near-Miss Parallax Choreography"
+- **No Fading**: Elements move through physical space, never fade in/out
+- **Individual Movement**: Each element has its own timing and trajectory
+- **Near-Miss Timing**: Elements appear to almost collide but pass smoothly
+- **Velocity Awareness**: Movement speed affects other elements
+- **Scroll Physics**: User scroll speed influences animation characteristics
+
+**Reference**: Complete implementation plan available in `MOTION_DESIGN_PLAN.md`
+
+---
+
 ### Edge Cases
 
-- What happens when a visitor has JavaScript disabled? (Site should show basic content and form should degrade gracefully with standard HTML form submission)
+- What happens when a visitor has JavaScript disabled? (Site should show basic content and form should degrade gracefully with standard HTML form submission; animations don't run but content is fully visible)
 - How does the site handle extremely long project descriptions in the contact form? (Textarea should have character limit of 2000 with counter, server-side validation enforces limit)
 - What happens when email service (Resend) is down during form submission? (Error message appears with alternative contact method: "Service temporarily unavailable. Email us directly at contact@phoebusdigital.com")
 - How does the navigation handle section anchors when JavaScript is disabled? (Standard HTML anchor links should work as fallback)
 - What happens when a visitor uses an extremely small viewport (< 320px)? (Design should remain functional down to 320px width minimum)
 - How does the mobile menu handle rapid open/close interactions? (Debounce toggle to prevent animation glitches, ensure focus management is robust)
 - What happens when Vercel Analytics tracking fails or is blocked by ad blockers? (Site continues to function normally, no errors logged to console)
-- How does the site handle visitors with reduced motion preferences? (All animations respect prefers-reduced-motion media query, parallax and transitions are disabled)
+- How does the site handle visitors with reduced motion preferences? (All animations respect prefers-reduced-motion media query, parallax and transitions are disabled; Intersection Observer still detects visibility but applies instant state changes instead of animated transitions)
 
 ## Requirements *(mandatory)*
 
@@ -334,3 +378,5 @@ A visitor encounters an unexpected error (network failure, component crash, form
 13. **SSL/HTTPS**: Vercel provides SSL by default; no additional configuration needed.
 
 14. **Domain**: Will use Vercel-provided domain initially; custom domain can be configured later.
+
+15. **Motion & Animation**: Scroll-triggered animations will use Intersection Observer API (not scroll event listeners or react-scroll-parallax). All animations will follow the "Near-Miss Parallax Choreography" philosophy from DESIGN_SYSTEM.md. Detailed motion plan available in `MOTION_DESIGN_PLAN.md`.
