@@ -76,7 +76,7 @@ export function NeumorphicNav({ items, defaultActive = 0 }: NeumorphicNavProps) 
       })
       resizeObserver.observe(containerRef.current)
     }
-    
+
     return () => {
       cancelAnimationFrame(rafId)
       clearTimeout(timer)
@@ -85,7 +85,8 @@ export function NeumorphicNav({ items, defaultActive = 0 }: NeumorphicNavProps) 
         resizeObserver.disconnect()
       }
     }
-  }, [mounted, activeIndex])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted])
 
   const updateSliderPosition = (index: number) => {
     const activeButton = navRefs.current[index]

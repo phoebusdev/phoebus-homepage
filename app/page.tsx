@@ -152,7 +152,7 @@ export default function Home() {
             <NeumorphicButton size="large" onClick={openModal}>
               Get Your Free Prototype
             </NeumorphicButton>
-            <NeumorphicButton size="large" onClick={() => navigate('/process')}>
+            <NeumorphicButton size="large" onClick={() => window.location.href = '/process'}>
               See Our Approach
             </NeumorphicButton>
           </div>

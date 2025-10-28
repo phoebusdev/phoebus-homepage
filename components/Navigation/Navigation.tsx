@@ -31,7 +31,9 @@ export function Navigation() {
 
   const handleNavClick = (item: { href?: string }) => {
     if (item.href) {
-      navigate(item.href)
+      console.log('Nav clicked:', item.href)
+      // Use direct navigation for now - simpler and more reliable
+      window.location.href = item.href
     }
   }
 
@@ -116,8 +118,8 @@ export function Navigation() {
                 ))}
                 <NeumorphicButton
                   onClick={() => {
-                    navigate('/contact')
                     setMobileMenuOpen(false)
+                    window.location.href = '/contact'
                   }}
                 >
                   Contact Us

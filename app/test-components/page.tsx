@@ -9,8 +9,7 @@ import { Icon } from '@/components/Icon/Icon'
 export default function TestComponents() {
   return (
     <>
-      <div className="animated-gradient-bg fixed inset-0 -z-10"></div>
-      <div className="frosted-glass-bg fixed inset-0 -z-5"></div>
+      <div className="monochrome-glass-bg fixed inset-0 -z-10"></div>
       <div className="min-h-screen py-20 px-8 relative">
         {/* Navigation */}
       <div className="mb-20">

@@ -44,8 +44,7 @@ export default function RootLayout({
     <html lang="en" className={`${montserrat.variable} ${chivoMono.variable}`}>
       <body className={`${montserrat.className} antialiased min-h-screen relative overflow-x-hidden`}>
         <PageTransitionProvider>
-          <div className="animated-gradient-bg fixed inset-0 -z-10"></div>
-          <div className="frosted-glass-bg fixed inset-0 -z-5"></div>
+          <div className="monochrome-glass-bg fixed inset-0 -z-10"></div>
           <div className="relative z-10">
             <Navigation />
             <PageTransitionWrapper>
