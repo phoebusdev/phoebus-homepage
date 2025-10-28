@@ -75,7 +75,7 @@ export function PrototypeModal({ isOpen, onClose, source }: PrototypeModalProps)
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-50">
       <div className="max-w-2xl w-full h-fit max-h-[95vh] flex flex-col">
         <NeumorphicCard className="flex-1 overflow-hidden">
           <div className="p-4 md:p-6 h-full flex flex-col">
